@@ -141,7 +141,7 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
     recv(s, buf, TAM_BUFFER, 0);
     printf("%s", buf);
 
-    while (intentos < MAX_ATTEMPTS && fgets(buf, TAM_BUFFER, fp) != NULL)
+    while (fgets(buf, TAM_BUFFER, fp) != NULL)
     {
 
         buf[strcspn(buf, "\n")] = 0; // strcspn devuelve el indice del primer caracter que coincide con el char del segundo parametro, igualarlo a 0 = ASCII de \0
@@ -178,7 +178,7 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
             }
             len += len1;
         }
-
+        
         // Recibir datos aquí...
         len = recv(s, buf, TAM_BUFFER, 0);
         if (len == -1)
@@ -199,16 +199,18 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
             len += len1;
         }
 
-        printf("%s", buf);
+        printf("S: %s", buf);
         intentos++;
         free(packet);
     }
 
     fclose(fp);
     free(file);
-    close(s);
 
     /* Print message indicating completion of task. */
+    sleep(1);
     time(&timevar);
     printf("All done at %s", (char *)ctime(&timevar));
+    close(s);
+
 }

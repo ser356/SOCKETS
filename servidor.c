@@ -312,7 +312,7 @@ void serverTCP(int s, struct sockaddr_in clientaddr_in)
 
 	struct linger linger; /* allow a lingering, graceful close; */
 						  /* used when setting SO_LINGER */
-
+	int readyToGo = 0;
 	/* Look up the host information for the remote host
 	 * that we have connected with.  Its internet address
 	 * was returned by the accept call, in the main
@@ -369,9 +369,8 @@ void serverTCP(int s, struct sockaddr_in clientaddr_in)
 	 * follow, and the loop will be exited.
 	 */
 	send(s, "S: 220 SERVICIO PREPARADO\r\n", sizeof("S: 220 SERVICIO PREPARADO\r\n"), 0);
-	while (attempts < MAX_ATTEMPTS)
+	while (1)
 	{
-
 		len = recv(s, buf, TAM_BUFFER, 0);
 		if (len == -1)
 		{
@@ -390,17 +389,22 @@ void serverTCP(int s, struct sockaddr_in clientaddr_in)
 				printf("error en recv\n");
 			}
 			len += len1;
-
 		}
-		printf("C:%s", buf);
+		printf("C: %s", buf);
 		if (strncmp(buf, "hola\r\n", 7) == 0)
 		{
-			sprintf(buf, "S: 221 Adios\r\n");
+			sprintf(buf, "¿que tal?\r\n");
+		}
+		else if (strncmp(buf, "adios\r\n", 8) == 0)
+		{
+			sprintf(buf, "¡Hasta luego!\r\n");
+			readyToGo = 1;
 		}
 		else
 		{
-			sprintf(buf, "S: Syntax Error\r\n");
+			sprintf(buf, "No te entiendo\r\n");
 		}
+
 		len = send(s, buf, TAM_BUFFER, 0);
 		if (len == -1)
 		{
@@ -419,19 +423,24 @@ void serverTCP(int s, struct sockaddr_in clientaddr_in)
 		}
 
 		attempts++;
+		if (readyToGo)
+		{
+			time(&timevar);
+			/* The port number must be converted first to host byte
+			 * order before printing.  On most hosts, this is not
+			 * necessary, but the ntohs() call is included here so
+			 * that this program could easily be ported to a host
+			 * that does require it.
+			 */
+			sleep(1);
+			printf("Completed %s port %u, %d requests, at %s",
+				   hostname, ntohs(clientaddr_in.sin_port), attempts, (char *)ctime(&timevar));
+			close(s);
+			break;
+		}
 	}
-	close(s);
 
 	/* Log a finishing message. */
-	time(&timevar);
-	/* The port number must be converted first to host byte
-	 * order before printing.  On most hosts, this is not
-	 * necessary, but the ntohs() call is included here so
-	 * that this program could easily be ported to a host
-	 * that does require it.
-	 */
-	printf("Completed %s port %u, %d requests, at %s\n",
-		   hostname, ntohs(clientaddr_in.sin_port), attempts, (char *)ctime(&timevar));
 }
 
 /*
