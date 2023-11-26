@@ -391,18 +391,21 @@ void serverTCP(int s, struct sockaddr_in clientaddr_in)
 			len += len1;
 		}
 		printf("C: %s", buf);
-		if (strncmp(buf, "hola\r\n", 7) == 0)
+		// Use of memcmp , safer than strcmp when it comes to comparing char arrays with no null terminator
+		if (memcmp(buf, "HOLA\r\n", 6) == 0)
 		{
-			sprintf(buf, "¿que tal?\r\n");
+			//aqui debe de ir el apartado de preguntas y respuestas
+			//como todavia no esta implementado, solo se responde con un mensaje
+			sprintf(buf, "TMP ¿QUÉ TAL?\r\n");
 		}
-		else if (strncmp(buf, "adios\r\n", 8) == 0)
+		else if (memcmp(buf, "ADIOS\r\n", 7) == 0)
 		{
-			sprintf(buf, "¡Hasta luego!\r\n");
+			sprintf(buf, "221 Cerrando el servicio\r\n");
 			readyToGo = 1;
 		}
 		else
 		{
-			sprintf(buf, "No te entiendo\r\n");
+			sprintf(buf, "500 Error de sintaxis\r\n");
 		}
 
 		len = send(s, buf, TAM_BUFFER, 0);

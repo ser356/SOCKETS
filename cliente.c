@@ -14,7 +14,6 @@
 #define MAX_ATTEMPTS 5
 void clienteTCP(char *program, char *hostname, char *protocol, char *filename);
 
-
 int main(int argc, char *argv[])
 {
     if (argc != 4)
@@ -143,27 +142,33 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
 
     while (fgets(buf, TAM_BUFFER, fp) != NULL)
     {
+        // strscspn returns the first index of the char that matches with second arg, equal to 0  means = ASCII of \0
 
         buf[strcspn(buf, "\n")] = 0; // strcspn devuelve el indice del primer caracter que coincide con el char del segundo parametro, igualarlo a 0 = ASCII de \0
 
         tam = strlen(buf);
-        char *packet = malloc(tam + 2); // +2 para \r\n y
+        char *packet = malloc((tam+2));
 
         if (packet == NULL)
         {
             perror(program);
-            fprintf(stderr, "%s: unable to allocate memory\n", program);
+            fprintf(stderr, "%s: Imposible asignar memoria\n", program);
             exit(1);
         }
 
-        strcpy(packet, buf);    // Copia buf en packet
-        strcat(packet, "\r\n"); // Añade \r\n al final de packet
+        // Data sending to server with aux packet
+        // Appending of \r\n to the end of the message to achieve the protocol specifications
+
+        memcpy(packet, buf,strlen(buf));
+        // append \r\n to the end of the message with memcpy
+        memcpy(packet + strlen(buf), "\r\n", 2);
+     
 
         len = send(s, packet, TAM_BUFFER, 0);
         if (len == -1)
         {
             perror(program);
-            fprintf(stderr, "%s: unable to send\n", program);
+            fprintf(stderr, "%s: Imposible enviar\n", program);
             intentos++;
         }
 
@@ -173,18 +178,18 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
             if (len1 == -1)
             {
                 perror(program);
-                fprintf(stderr, "%s: unable to send\n", program);
+                fprintf(stderr, "%s: Imposible enviar\n", program);
                 intentos++;
             }
             len += len1;
         }
-        
-        // Recibir datos aquí...
+
+        // Data receiving from server
         len = recv(s, buf, TAM_BUFFER, 0);
         if (len == -1)
         {
             perror(program);
-            fprintf(stderr, "%s: unable to receive\n", program);
+            fprintf(stderr, "%s: Imposible recibir\n", program);
             intentos++;
         }
         while (len < TAM_BUFFER)
@@ -193,7 +198,7 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
             if (len1 == -1)
             {
                 perror(program);
-                fprintf(stderr, "%s: unable to receive\n", program);
+                fprintf(stderr, "%s: Imposible recibir\n", program);
                 intentos++;
             }
             len += len1;
@@ -212,5 +217,4 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
     time(&timevar);
     printf("All done at %s", (char *)ctime(&timevar));
     close(s);
-
 }
