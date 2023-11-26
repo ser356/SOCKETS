@@ -142,48 +142,27 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
 
     while (fgets(buf, TAM_BUFFER, fp) != NULL)
     {
-        // strscspn returns the first index of the char that matches with second arg, equal to 0  means = ASCII of \0
-
-        buf[strcspn(buf, "\n")] = 0; // strcspn devuelve el indice del primer caracter que coincide con el char del segundo parametro, igualarlo a 0 = ASCII de \0
 
         tam = strlen(buf);
-        char *packet = malloc((tam+2));
-
-        if (packet == NULL)
+        // If the last char is \n, replace it with \0
+        if (tam > 0 && buf[tam - 1] == '\n')
         {
-            perror(program);
-            fprintf(stderr, "%s: Imposible asignar memoria\n", program);
-            exit(1);
+            buf[tam - 1] = '\0';
         }
+        // Data sending to server
+        // MATCHING THE PROTOCOL FORMAT
+        // add  \r\n to the end of the message
+        strcat(buf, "\r\n");
 
-        // Data sending to server with aux packet
-        // Appending of \r\n to the end of the message to achieve the protocol specifications
-
-        memcpy(packet, buf,strlen(buf));
-        // append \r\n to the end of the message with memcpy
-        memcpy(packet + strlen(buf), "\r\n", 2);
-     
-
-        len = send(s, packet, TAM_BUFFER, 0);
+        len = send(s, buf, TAM_BUFFER, 0);
         if (len == -1)
         {
             perror(program);
             fprintf(stderr, "%s: Imposible enviar\n", program);
             intentos++;
         }
-
-        while (len < TAM_BUFFER)
-        {
-            len1 = send(s, packet + len, TAM_BUFFER - len, 0);
-            if (len1 == -1)
-            {
-                perror(program);
-                fprintf(stderr, "%s: Imposible enviar\n", program);
-                intentos++;
-            }
-            len += len1;
-        }
-
+        // reasign buf to 0 to avoid garbage
+        memset(buf, 0, TAM_BUFFER);
         // Data receiving from server
         len = recv(s, buf, TAM_BUFFER, 0);
         if (len == -1)
@@ -192,21 +171,9 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
             fprintf(stderr, "%s: Imposible recibir\n", program);
             intentos++;
         }
-        while (len < TAM_BUFFER)
-        {
-            len1 = recv(s, buf + len, TAM_BUFFER - len, 0);
-            if (len1 == -1)
-            {
-                perror(program);
-                fprintf(stderr, "%s: Imposible recibir\n", program);
-                intentos++;
-            }
-            len += len1;
-        }
 
         printf("S: %s", buf);
         intentos++;
-        free(packet);
     }
 
     fclose(fp);

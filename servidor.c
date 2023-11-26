@@ -369,38 +369,53 @@ void serverTCP(int s, struct sockaddr_in clientaddr_in)
 	 * follow, and the loop will be exited.
 	 */
 	send(s, "S: 220 SERVICIO PREPARADO\r\n", sizeof("S: 220 SERVICIO PREPARADO\r\n"), 0);
+	int flag = 0;
 	while (1)
 	{
 		len = recv(s, buf, TAM_BUFFER, 0);
 		if (len == -1)
 		{
-
 			attempts++;
 			printf("error en recv\n");
 		}
-
-		while (len < TAM_BUFFER)
-		{
-
-			len1 = recv(s, buf + len, TAM_BUFFER - len, 0);
-			if (len1 == -1)
-			{
-				attempts++;
-				printf("error en recv\n");
-			}
-			len += len1;
-		}
 		printf("C: %s", buf);
 		// Use of memcmp , safer than strcmp when it comes to comparing char arrays with no null terminator
-		if (memcmp(buf, "HOLA\r\n", 6) == 0)
+		if (strcmp(buf, "HOLA\r\n") == 0)
 		{
-			//aqui debe de ir el apartado de preguntas y respuestas
-			//como todavia no esta implementado, solo se responde con un mensaje
-			sprintf(buf, "TMP ¿QUÉ TAL?\r\n");
+			sprintf(buf, "250 HOLA\r\n");
+			send(s, buf, TAM_BUFFER, 0);
+			while (1)
+			{
+				len = recv(s, buf, TAM_BUFFER, 0);
+				if (len == -1)
+				{
+					attempts++;
+					printf("error en recv\n");
+				}
+				printf("C: %s", buf);
+				if (strcmp(buf, "QUE QUIERES?\r\n") == 0)
+				{
+					sprintf(buf, "250 LISTO\r\n");
+					send(s, buf, TAM_BUFFER, 0);
+					
+				}
+				else if (strcmp(buf, "ADIOS\r\n") == 0)
+				{
+					sprintf(buf, "250 ADIOS\r\n");
+					send(s, buf, TAM_BUFFER, 0);
+					readyToGo = 1;
+					break;
+				}
+				else
+				{
+					sprintf(buf, "500 Error de sintaxis\r\n");
+					send(s, buf, TAM_BUFFER, 0);
+				}
+			}
 		}
-		else if (memcmp(buf, "ADIOS\r\n", 7) == 0)
+		else if (strcmp(buf, "ADIOS\r\n") == 0)
 		{
-			sprintf(buf, "221 Cerrando el servicio\r\n");
+			sprintf(buf, "250 ADIOS\r\n");
 			readyToGo = 1;
 		}
 		else
@@ -413,16 +428,6 @@ void serverTCP(int s, struct sockaddr_in clientaddr_in)
 		{
 			attempts++;
 			printf("error en send\n");
-		}
-		while (len < TAM_BUFFER)
-		{
-			len1 = send(s, &buf[len], TAM_BUFFER - len, 0);
-			if (len1 == -1)
-			{
-				attempts++;
-				printf("error en send\n");
-			}
-			len += len1;
 		}
 
 		attempts++;
