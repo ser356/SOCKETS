@@ -18,12 +18,17 @@
 #include <time.h>
 #include <unistd.h>
 
-#define MAX_ATTEMPTS 5
+#define MAX_requestattempts 5
 
 #define PUERTO 17278
 #define ADDRNOTFOUND 0xffffffff /* return address for unfound host */
 #define TAM_BUFFER 516
 #define MAXHOST 128
+#define HOLA "HOLA\r\n"
+#define ADIOS "ADIOS\r\n"
+#define ACIERTO "350 ACIERTO\r\n"
+#define QUE_QUIERES "QUE QUIERES?\r\n"
+#define SYNTAX_ERROR "500 Error de sintaxis\r\n"
 
 extern int errno;
 
@@ -36,7 +41,10 @@ extern int errno;
  *	will loop forever, until killed by a signal.
  *
  */
-
+char *getAnswerFromIndex(int index, char **matrizPreguntas);
+char *getRandomQuestion(char **matrizPreguntas, int *index);
+char **readArchivoPreguntas(char *nombreArchivo);
+char **readArchivoRespuestas(char *nombreArchivo);
 void serverTCP(int s, struct sockaddr_in peeraddr_in);
 void serverUDP(int s, char *buffer, struct sockaddr_in clientaddr_in);
 void errout(char *); /* declare error out routine */
@@ -302,9 +310,9 @@ char *argv[];
  */
 void serverTCP(int s, struct sockaddr_in clientaddr_in)
 {
-	int attempts = 0;		/* keeps count of number of requests */
-	char buf[TAM_BUFFER];	/* This example uses TAM_BUFFER byte messages. */
-	char hostname[MAXHOST]; /* remote host's name string */
+	int requestattempts = 0; /* keeps count of number of requests */
+	char buf[TAM_BUFFER];	 /* This example uses TAM_BUFFER byte messages. */
+	char hostname[MAXHOST];	 /* remote host's name string */
 
 	int len, len1, status;
 	// struct hostent *hp; /* pointer to host info for remote host */
@@ -368,83 +376,95 @@ void serverTCP(int s, struct sockaddr_in clientaddr_in)
 	 * how the server will know that no more requests will
 	 * follow, and the loop will be exited.
 	 */
+
+	char **matrizPreguntas = readArchivoPreguntas("archivopreguntas.txt");
+	char **matrizRespuestas = readArchivoRespuestas("archivorespuestas.txt");
+
+	if (matrizPreguntas == NULL)
+	{
+		printf("FATAL!: No se pudo leer el archivo de preguntas!\n");
+		exit(1);
+	}
+	if (matrizRespuestas == NULL)
+	{
+		printf("FATAL!: No se pudo leer el archivo de respuestas!\n");
+		exit(1);
+	}
 	send(s, "S: 220 SERVICIO PREPARADO\r\n", sizeof("S: 220 SERVICIO PREPARADO\r\n"), 0);
 	int flag = 0;
+	int intentosJuego = 5;
 	while (1)
 	{
 		len = recv(s, buf, TAM_BUFFER, 0);
 		if (len == -1)
 		{
-			attempts++;
 			printf("error en recv\n");
+			continue;
 		}
+
 		printf("C: %s", buf);
-		// Use of memcmp , safer than strcmp when it comes to comparing char arrays with no null terminator
-		if (strcmp(buf, "HOLA\r\n") == 0)
+
+		if (strcmp(buf, HOLA) == 0)
 		{
-			sprintf(buf, "250 HOLA\r\n");
-			send(s, buf, TAM_BUFFER, 0);
-			while (1)
+			char *respuesta = NULL;
+			do
 			{
+				int index;
+				char *lineofFileofQuestions = getRandomQuestion(matrizPreguntas, &index);
+				lineofFileofQuestions[strlen(lineofFileofQuestions) - 1] = '\0';
+
+				char response[TAM_BUFFER] = "250 ";
+				sprintf(response, "250 %s#%d\r\n", lineofFileofQuestions, intentosJuego);
+				send(s, response, TAM_BUFFER, 0);
+
 				len = recv(s, buf, TAM_BUFFER, 0);
 				if (len == -1)
 				{
-					attempts++;
 					printf("error en recv\n");
-				}
-				printf("C: %s", buf);
-				if (strcmp(buf, "QUE QUIERES?\r\n") == 0)
-				{
-					sprintf(buf, "250 LISTO\r\n");
-					send(s, buf, TAM_BUFFER, 0);
-					
-				}
-				else if (strcmp(buf, "ADIOS\r\n") == 0)
-				{
-					sprintf(buf, "250 ADIOS\r\n");
-					send(s, buf, TAM_BUFFER, 0);
-					readyToGo = 1;
 					break;
 				}
-				else
+
+				printf("C:%s", buf);
+
+				char *respuesta = getAnswerFromIndex(index, matrizRespuestas);
+				respuesta[strlen(respuesta) - 1] = '\0';
+				strcat(respuesta, "\r\n");
+
+				while (strcmp(buf, respuesta) != 0 && intentosJuego > 0)
 				{
-					sprintf(buf, "500 Error de sintaxis\r\n");
+					intentosJuego--;
+					atoi(respuesta) < atoi(buf) ? sprintf(buf, "354 MENOR\r\n") : sprintf(buf, "354 MAYOR\r\n");
 					send(s, buf, TAM_BUFFER, 0);
+					len = recv(s, buf, TAM_BUFFER, 0);
+					if (len == -1)
+					{
+						printf("error en recv\n");
+						break;
+					}
+					printf("C:%s", buf);
 				}
-			}
+
+				if (intentosJuego == 0)
+				{
+					printf("El cliente se quedó sin intentos\n");
+					break;
+				}
+
+				sprintf(buf, ACIERTO);
+				send(s, buf, TAM_BUFFER, 0);
+
+			} while (strcmp(buf, respuesta) == 0);
 		}
-		else if (strcmp(buf, "ADIOS\r\n") == 0)
+		else if (strcmp(buf, ADIOS) == 0)
 		{
 			sprintf(buf, "250 ADIOS\r\n");
-			readyToGo = 1;
+			send(s, buf, TAM_BUFFER, 0);
+			break;
 		}
 		else
 		{
-			sprintf(buf, "500 Error de sintaxis\r\n");
-		}
-
-		len = send(s, buf, TAM_BUFFER, 0);
-		if (len == -1)
-		{
-			attempts++;
-			printf("error en send\n");
-		}
-
-		attempts++;
-		if (readyToGo)
-		{
-			time(&timevar);
-			/* The port number must be converted first to host byte
-			 * order before printing.  On most hosts, this is not
-			 * necessary, but the ntohs() call is included here so
-			 * that this program could easily be ported to a host
-			 * that does require it.
-			 */
-			sleep(1);
-			printf("Completed %s port %u, %d requests, at %s",
-				   hostname, ntohs(clientaddr_in.sin_port), attempts, (char *)ctime(&timevar));
-			close(s);
-			break;
+			sprintf(buf, SYNTAX_ERROR);
+			send(s, buf, TAM_BUFFER, 0);
 		}
 	}
 
@@ -462,4 +482,59 @@ void errout(char *hostname)
 
 void serverUDP(int s, char *buffer, struct sockaddr_in clientaddr_in)
 {
+}
+
+char **readArchivoPreguntas(char *nombreArchivo)
+{
+	FILE *file = fopen(nombreArchivo, "r");
+	if (file == NULL)
+	{
+		printf("No se pudo abrir el archivo\n");
+		return NULL;
+	}
+
+	char **matrizPreguntas = malloc(10 * sizeof(char *));
+	for (int j = 0; j < 10; j++)
+		matrizPreguntas[j] = malloc(250 * sizeof(char));
+
+	int i = 0;
+	while (fgets(matrizPreguntas[i], 250, file))
+	{
+		i++;
+	}
+	fclose(file);
+	return matrizPreguntas;
+}
+
+char **readArchivoRespuestas(char *nombreArchivo)
+{
+	FILE *file = fopen(nombreArchivo, "r");
+	if (file == NULL)
+	{
+		printf("No se pudo abrir el archivo\n");
+		return NULL;
+	}
+
+	char **matrizRespuestas = malloc(10 * sizeof(char *));
+	for (int j = 0; j < 10; j++)
+		matrizRespuestas[j] = malloc(250 * sizeof(char));
+
+	int i = 0;
+	while (fgets(matrizRespuestas[i], 250, file))
+	{
+		i++;
+	}
+	fclose(file);
+	return matrizRespuestas;
+}
+char *getRandomQuestion(char **matrizPreguntas, int *index)
+{
+	srand(time(NULL));
+	int random = rand() % 10;
+	*index = random;
+	return matrizPreguntas[random];
+}
+char *getAnswerFromIndex(int index, char **matrizPreguntas)
+{
+	return matrizPreguntas[index];
 }
