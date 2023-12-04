@@ -142,7 +142,10 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
 
     while (fgets(buf, TAM_BUFFER, fp) != NULL)
     {
-
+        if(strspn(buf,"\n")==   strlen(buf))
+        {
+            continue;
+        }
         tam = strlen(buf);
         // If the last char is \n, replace it with \0
         if (tam > 0 && buf[tam - 1] == '\n')

@@ -407,7 +407,8 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 
 		printf("C: %s", buf);
 
-		if (strcmp(buf, HOLA) == 0 || acierto==0)
+		if (strcmp(buf, HOLA) == 0 && acierto==0)
+		
 		{
 			
 			while (intentosJuego > 0)
@@ -475,6 +476,7 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 		else if (strcmp(buf, ADIOS) == 0)
 		{
 			send(sock, "250 ADIOS\r\n", sizeof("250 ADIOS\r\n"), 0);
+			acierto=1;
 			break;
 		}
 		else
