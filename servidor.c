@@ -313,17 +313,15 @@ char *argv[];
  */
 void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 {
-	int requestattempts = 0; /* keeps count of number of requests */
-	char buf[TAM_BUFFER];	 /* This example uses TAM_BUFFER byte messages. */
-	char hostname[MAXHOST];	 /* remote host's name string */
+	char buf[TAM_BUFFER];	/* This example uses TAM_BUFFER byte messages. */
+	char hostname[MAXHOST]; /* remote host's name string */
 
-	int len, len1, status;
+	int len, status;
 	// struct hostent *hp; /* pointer to host info for remote host */
 	long timevar; /* contains time returned by time() */
 
 	struct linger linger; /* allow a lingering, graceful close; */
 						  /* used when setting SO_LINGER */
-	int readyToGo = 0;
 	/* Look up the host information for the remote host
 	 * that we have connected with.  Its internet address
 	 * was returned by the accept call, in the main
@@ -394,13 +392,12 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 		printf("FATAL!: No se pudo leer el archivo de respuestas!\n");
 		exit(1);
 	}
-	send(sock, "S: 220 SERVICIO PREPARADO\r\n", sizeof("S: 220 SERVICIO PREPARADO\r\n"), 0);
-	int flag = 0;
+	send(sock, "220 SERVICIO PREPARADO\r\n", sizeof("220 SERVICIO PREPARADO\r\n"), 0);
 	int intentosJuego = 5;
 	int acierto = 0;
 	while (1)
 	{
-
+		memset(buf, 0, TAM_BUFFER);
 		len = recv(sock, buf, TAM_BUFFER, 0);
 		if (len == -1)
 		{
@@ -409,21 +406,23 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 		}
 
 		printf("C: %s", buf);
-		if (strcmp(buf, HOLA) == 0 && acierto == 0)
 
+		int siguienteRonda = 0;
+		while (1)
 		{
+			int index = 0;
 
-			while (intentosJuego > 0)
+			char *lineofFileofQuestions;
+			lineofFileofQuestions = getRandomQuestion(matrizPreguntas, &index);
+			if (strcmp(buf, HOLA) == 0 || siguienteRonda == 1)
 			{
 
-				int index = 0;
-				char *lineofFileofQuestions = getRandomQuestion(matrizPreguntas, &index);
 				lineofFileofQuestions[strlen(lineofFileofQuestions) - 1] = '\0';
 
 				char response[TAM_BUFFER] = "250 ";
 				sprintf(response, "250 %s#%d\r\n", lineofFileofQuestions, intentosJuego);
 				send(sock, response, TAM_BUFFER, 0);
-
+				memset(buf, 0, TAM_BUFFER);
 				len = recv(sock, buf, TAM_BUFFER, 0);
 
 				if (len == -1)
@@ -440,7 +439,7 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 
 				while (strcmp(buf, respuesta) != 0)
 				{
-					sleep(1);
+
 					char esMayoroMenor[TAM_BUFFER];
 
 					if (atoi(buf) > atoi(respuesta))
@@ -453,7 +452,6 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 						intentosJuego--;
 						sprintf(esMayoroMenor, "354 %s#%d", MENOR, intentosJuego);
 					}
-					printf("%s\n",esMayoroMenor);
 					// add  \r\n to the end of the message
 					strcat(esMayoroMenor, "\r\n");
 
@@ -471,25 +469,24 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 				{
 					printf("El cliente se quedó sin intentos\n");
 				}
+
 				if (strcmp(buf, respuesta) == 0)
 				{
+					siguienteRonda = 1;
 					send(sock, ACIERTO, sizeof(ACIERTO), 0);
-					acierto = 1;
-					break;
+					continue;
 				}
-
-				// restart loop
 			}
-		}
-		else if (strcmp(buf, ADIOS) == 0)
-		{
-			send(sock, "250 ADIOS\r\n", sizeof("250 ADIOS\r\n"), 0);
-			acierto = 1;
-			break;
-		}
-		else
-		{
-			send(sock, SYNTAX_ERROR, sizeof(SYNTAX_ERROR), 0);
+			else if (esAdios(buf))
+			{
+				send(sock, ADIOS, sizeof(ADIOS), 0);
+				break;
+			}
+			else
+			{
+				send(sock, SYNTAX_ERROR, sizeof(SYNTAX_ERROR), 0);
+				break;
+			}
 		}
 	}
 

@@ -137,15 +137,13 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
 
     int intentos = 0; // Agrega un contador para los mensajes
     size_t tam;
+    memset(buf, 0, TAM_BUFFER);
     recv(s, buf, TAM_BUFFER, 0);
     printf("%s", buf);
 
     while (fgets(buf, TAM_BUFFER, fp) != NULL)
     {
-        if (strspn(buf, "\n") == strlen(buf))
-        {
-            continue;
-        }
+    
         tam = strlen(buf);
         // If the last char is \n, replace it with \0
         if (tam > 0 && buf[tam - 1] == '\n')
@@ -156,7 +154,7 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
         // MATCHING THE PROTOCOL FORMAT
         // add  \r\n to the end of the message
         strcat(buf, "\r\n");
-
+        
         len = send(s, buf, TAM_BUFFER, 0);
         if (len == -1)
         {
@@ -164,7 +162,6 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
             fprintf(stderr, "%s: Imposible enviar\n", program);
             intentos++;
         }
-        // reasign buf to 0 to avoid garbage
         memset(buf, 0, TAM_BUFFER);
         // Data receiving from server
         len = recv(s, buf, TAM_BUFFER, 0);
@@ -175,8 +172,8 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
             intentos++;
         }
 
-
         printf("S: %s", buf);
+
         intentos++;
     }
 
