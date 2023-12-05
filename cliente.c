@@ -142,7 +142,7 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
 
     while (fgets(buf, TAM_BUFFER, fp) != NULL)
     {
-        if(strspn(buf,"\n")==   strlen(buf))
+        if (strspn(buf, "\n") == strlen(buf))
         {
             continue;
         }
@@ -174,6 +174,7 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
             fprintf(stderr, "%s: Imposible recibir\n", program);
             intentos++;
         }
+
 
         printf("S: %s", buf);
         intentos++;

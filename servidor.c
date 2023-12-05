@@ -27,8 +27,8 @@
 #define HOLA "HOLA\r\n"
 #define ADIOS "ADIOS\r\n"
 #define ACIERTO "350 ACIERTO\r\n"
-#define MAYOR "350 MAYOR\r\n"
-#define MENOR "350 MENOR\r\n"
+#define MAYOR "MAYOR"
+#define MENOR "MENOR"
 #define SYNTAX_ERROR "500 Error de sintaxis\r\n"
 
 extern int errno;
@@ -42,6 +42,7 @@ extern int errno;
  *	will loop forever, until killed by a signal.
  *
  */
+int esAdios(char *buffer);
 char *getAnswerFromIndex(int index, char **matrizPreguntas);
 char *getRandomQuestion(char **matrizPreguntas, int *index);
 char **readArchivoPreguntas(char *nombreArchivo, int *nlines);
@@ -57,7 +58,8 @@ int main(argc, argv)
 int argc;
 char *argv[];
 {
-
+	// seed
+	srand(time(NULL));
 	int s_TCP, s_UDP; /* connected socket descriptor */
 	int ls_TCP;		  /* listen socket descriptor */
 
@@ -395,9 +397,10 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 	send(sock, "S: 220 SERVICIO PREPARADO\r\n", sizeof("S: 220 SERVICIO PREPARADO\r\n"), 0);
 	int flag = 0;
 	int intentosJuego = 5;
-	int acierto=0;
+	int acierto = 0;
 	while (1)
 	{
+
 		len = recv(sock, buf, TAM_BUFFER, 0);
 		if (len == -1)
 		{
@@ -406,15 +409,14 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 		}
 
 		printf("C: %s", buf);
+		if (strcmp(buf, HOLA) == 0 && acierto == 0)
 
-		if (strcmp(buf, HOLA) == 0 && acierto==0)
-		
 		{
-			
+
 			while (intentosJuego > 0)
 			{
-				
-				int index;
+
+				int index = 0;
 				char *lineofFileofQuestions = getRandomQuestion(matrizPreguntas, &index);
 				lineofFileofQuestions[strlen(lineofFileofQuestions) - 1] = '\0';
 
@@ -423,6 +425,7 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 				send(sock, response, TAM_BUFFER, 0);
 
 				len = recv(sock, buf, TAM_BUFFER, 0);
+
 				if (len == -1)
 				{
 					perror("recv failed");
@@ -435,19 +438,25 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 				respuesta[strlen(respuesta) - 1] = '\0';
 				strcat(respuesta, "\r\n");
 
-				while (strcmp(buf, respuesta) != 0 && intentosJuego > 0)
+				while (strcmp(buf, respuesta) != 0)
 				{
+					sleep(1);
+					char esMayoroMenor[TAM_BUFFER]= "354 ";
 
 					if (atoi(buf) > atoi(respuesta))
 					{
 						intentosJuego--;
-						send(sock, MENOR, sizeof(MENOR), 0);
+						sprintf(esMayoroMenor, "%s#%d", MAYOR, intentosJuego);
 					}
 					if (atoi(buf) < atoi(respuesta))
 					{
 						intentosJuego--;
-						send(sock, MAYOR, sizeof(MAYOR), 0);
+						sprintf(esMayoroMenor, "%s#%d", MENOR, intentosJuego);
 					}
+					// add  \r\n to the end of the message
+					strcat(esMayoroMenor, "\r\n");
+
+					send(sock, esMayoroMenor, TAM_BUFFER, 0);
 					len = recv(sock, buf, TAM_BUFFER, 0);
 					if (len == -1)
 					{
@@ -460,13 +469,11 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 				if (intentosJuego == 0)
 				{
 					printf("El cliente se quedó sin intentos\n");
-					
 				}
-				else if (strcmp(buf, respuesta) == 0)
+				if (strcmp(buf, respuesta) == 0)
 				{
-					printf("El cliente acertó\n");
 					send(sock, ACIERTO, sizeof(ACIERTO), 0);
-					acierto=1;
+					acierto = 1;
 					break;
 				}
 
@@ -476,15 +483,13 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 		else if (strcmp(buf, ADIOS) == 0)
 		{
 			send(sock, "250 ADIOS\r\n", sizeof("250 ADIOS\r\n"), 0);
-			acierto=1;
+			acierto = 1;
 			break;
 		}
 		else
 		{
 			send(sock, SYNTAX_ERROR, sizeof(SYNTAX_ERROR), 0);
 		}
-
-		
 	}
 
 	/* Log a finishing message. */
@@ -550,7 +555,7 @@ char **readArchivoRespuestas(char *nombreArchivo)
 }
 char *getRandomQuestion(char **matrizPreguntas, int *index)
 {
-	srand(time(NULL));
+
 	int random = rand() % 10;
 	*index = random;
 	return matrizPreguntas[random];
@@ -558,4 +563,9 @@ char *getRandomQuestion(char **matrizPreguntas, int *index)
 char *getAnswerFromIndex(int index, char **matrizPreguntas)
 {
 	return matrizPreguntas[index];
+}
+
+int esAdios(char *buffer)
+{
+	return strcmp(buffer, ADIOS) == 0 ? 1 : 0;
 }
