@@ -441,18 +441,19 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 				while (strcmp(buf, respuesta) != 0)
 				{
 					sleep(1);
-					char esMayoroMenor[TAM_BUFFER]= "354 ";
+					char esMayoroMenor[TAM_BUFFER];
 
 					if (atoi(buf) > atoi(respuesta))
 					{
 						intentosJuego--;
-						sprintf(esMayoroMenor, "%s#%d", MAYOR, intentosJuego);
+						sprintf(esMayoroMenor, "354 %s#%d", MAYOR, intentosJuego);
 					}
 					if (atoi(buf) < atoi(respuesta))
 					{
 						intentosJuego--;
-						sprintf(esMayoroMenor, "%s#%d", MENOR, intentosJuego);
+						sprintf(esMayoroMenor, "354 %s#%d", MENOR, intentosJuego);
 					}
+					printf("%s\n",esMayoroMenor);
 					// add  \r\n to the end of the message
 					strcat(esMayoroMenor, "\r\n");
 
