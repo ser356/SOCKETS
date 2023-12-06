@@ -428,15 +428,21 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 		recv(sock, buf, TAM_BUFFER, 0);
 		if (esAdios(buf))
 		{
-			printf("C:%s", buf);
+			
 
 			break;
 		}
-		
-		
+
+		if(strcmp(buf, "HOLA\r\n") == 0)
+		{
+			
+			printf("C:%s", buf);
+		}
 
 		if (strcmp(buf, HOLA) == 0 || next == 1)
 		{
+			
+			
 			next = 0;
 			lineofFileofQuestions = getRandomQuestion(matrizPreguntas, &index);
 
@@ -470,7 +476,17 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 				printf("C:%s", buf);
 				fflush(stdout);
 
-				
+				// Verificar si el cliente envió "ADIOS"
+				if (strcmp(buf, "ADIOS\r\n") == 0)
+				{
+					len = send(sock, "221 ADIOS\r\n", sizeof("221 ADIOS\r\n"), 0);
+					if (len == -1)
+					{
+						perror("Error al enviar");
+						exit(1);
+					}
+					break;
+				}
 
 				if (atoi(buf) > atoi(respuesta))
 				{
@@ -501,12 +517,15 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 					}
 
 					next = 1;
+					
 				}
 
 			} while (!next);
+
 		}
 		else
 		{
+			printf("C:%s", buf);
 			len = send(sock, SYNTAX_ERROR, sizeof(SYNTAX_ERROR), 0);
 			if (len == -1)
 			{
