@@ -134,16 +134,18 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
 
     printf("Connected to %s on port %u at %s",
            hostname, ntohs(myaddr_in.sin_port), (char *)ctime(&timevar));
+    fflush(stdout);
 
     int intentos = 0; // Agrega un contador para los mensajes
     size_t tam;
     memset(buf, 0, TAM_BUFFER);
     recv(s, buf, TAM_BUFFER, 0);
     printf("%s", buf);
+    fflush(stdout);
 
     while (fgets(buf, TAM_BUFFER, fp) != NULL)
     {
-    
+
         tam = strlen(buf);
         // If the last char is \n, replace it with \0
         if (tam > 0 && buf[tam - 1] == '\n')
@@ -154,7 +156,7 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
         // MATCHING THE PROTOCOL FORMAT
         // add  \r\n to the end of the message
         strcat(buf, "\r\n");
-        
+
         len = send(s, buf, TAM_BUFFER, 0);
         if (len == -1)
         {
@@ -171,8 +173,9 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
             fprintf(stderr, "%s: Imposible recibir\n", program);
             intentos++;
         }
-       
+
         printf("S: %s", buf);
+        fflush(stdout);
 
         intentos++;
     }
@@ -184,5 +187,7 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
     sleep(1);
     time(&timevar);
     printf("All done at %s", (char *)ctime(&timevar));
+    fflush(stdout);
+
     close(s);
 }

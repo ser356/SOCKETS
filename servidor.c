@@ -132,13 +132,16 @@ char *argv[];
 	{
 		perror(argv[0]);
 		printf("%s: unable to create socket UDP\n", argv[0]);
+		fflush(stdout);
+
 		exit(1);
 	}
 	/* Bind the server's address to the socket. */
 	if (bind(s_UDP, (struct sockaddr *)&myaddr_in, sizeof(struct sockaddr_in)) == -1)
 	{
 		perror(argv[0]);
-		printf("%s: unable to bind address UDP\n", argv[0]);
+		fflush(stdout);
+		("%s: unable to bind address UDP\n", argv[0]);
 		exit(1);
 	}
 
@@ -280,7 +283,11 @@ char *argv[];
 					if (cc == -1)
 					{
 						perror(argv[0]);
-						printf("%s: recvfrom error\n", argv[0]);
+						fflush(stdout);
+						fflush(stdout);
+						("%s: recvfrom error\n", argv[0]);
+						fflush(stdout);
+
 						exit(1);
 					}
 					/* Make sure the message received is
@@ -294,7 +301,10 @@ char *argv[];
 		/* Cerramos los sockets UDP y TCP */
 
 		close(s_TCP);
-		printf("\nFin de programa servidor!\n");
+		fflush(stdout);
+		fflush(stdout);
+		("\nFin de programa servidor!\n");
+		fflush(stdout);
 
 	default: /* Parent process comes here. */
 		exit(0);
@@ -350,7 +360,9 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 	 * that does require it.
 	 */
 	/*
-	printf("Startup from %s port %u at %s",
+		fflush(stdout);
+	fflush(stdout);
+("Startup from %s port %u at %s",
 		   hostname, ntohs(clientaddr_in.sin_port), (char *)ctime(&timevar));
 
 	*/
@@ -379,17 +391,27 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 	 */
 	int numberOfLines;
 	char **matrizPreguntas = readArchivoPreguntas("archivopreguntas.txt", &numberOfLines);
-	printf("Numero de lineas: %d\n", numberOfLines);
+	fflush(stdout);
+	fflush(stdout);
+	("Numero de lineas: %d\n", numberOfLines);
 	char **matrizRespuestas = readArchivoRespuestas("archivorespuestas.txt");
 
 	if (matrizPreguntas == NULL)
 	{
-		printf("FATAL!: No se pudo leer el archivo de preguntas!\n");
+		fflush(stdout);
+		fflush(stdout);
+		("FATAL!: No se pudo leer el archivo de preguntas!\n");
+		fflush(stdout);
+
 		exit(1);
 	}
 	if (matrizRespuestas == NULL)
 	{
-		printf("FATAL!: No se pudo leer el archivo de respuestas!\n");
+		fflush(stdout);
+		fflush(stdout);
+		("FATAL!: No se pudo leer el archivo de respuestas!\n");
+		fflush(stdout);
+
 		exit(1);
 	}
 	send(sock, "220 SERVICIO PREPARADO\r\n", sizeof("220 SERVICIO PREPARADO\r\n"), 0);
@@ -404,6 +426,8 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 	{
 		recv(sock, buf, TAM_BUFFER, 0);
 		printf("C:%s", buf);
+		fflush(stdout);
+
 		if (strcmp(buf, HOLA) == 0)
 		{
 			lineofFileofQuestions = getRandomQuestion(matrizPreguntas, &index);
@@ -422,12 +446,13 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 
 			do
 			{
-
+				sleep(1);	
 				// Recibir respuesta del cliente
-				sleep(1);
 				recv(sock, buf, TAM_BUFFER, 0);
 				printf("C:%s", buf);
-				if(esAdios(buf)){
+				fflush(stdout);
+				if (esAdios(buf))
+				{
 					send(sock, ADIOS, sizeof(ADIOS), 0);
 					break;
 				}
@@ -457,11 +482,8 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 					respuesta = getAnswerFromIndex(index, matrizRespuestas);
 					respuesta[strlen(respuesta) - 1] = '\0';
 					strcat(respuesta, "\r\n");
-
-
 				}
 
-				
 			} while (1);
 		}
 		else if (esAdios(buf))
@@ -485,6 +507,7 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 void errout(char *hostname)
 {
 	printf("Connection with %s aborted on error\n", hostname);
+	fflush(stdout);
 	exit(1);
 }
 
@@ -499,6 +522,8 @@ char **readArchivoPreguntas(char *nombreArchivo, int *nlines)
 	if (file == NULL)
 	{
 		printf("No se pudo abrir el archivo\n");
+		fflush(stdout);
+
 		return NULL;
 	}
 
@@ -522,6 +547,8 @@ char **readArchivoRespuestas(char *nombreArchivo)
 	if (file == NULL)
 	{
 		printf("No se pudo abrir el archivo\n");
+		fflush(stdout);
+
 		return NULL;
 	}
 
