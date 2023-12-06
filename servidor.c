@@ -42,6 +42,7 @@ extern int errno;
  *	will loop forever, until killed by a signal.
  *
  */
+int createLog(char *filename);
 int esAdios(char *buffer);
 char *getAnswerFromIndex(int index, char **matrizPreguntas);
 char *getRandomQuestion(char **matrizPreguntas, int *index);
@@ -60,6 +61,7 @@ char *argv[];
 {
 	// seed
 	srand(time(NULL));
+
 	int s_TCP, s_UDP; /* connected socket descriptor */
 	int ls_TCP;		  /* listen socket descriptor */
 
@@ -141,7 +143,7 @@ char *argv[];
 	{
 		perror(argv[0]);
 		fflush(stdout);
-		("%s: unable to bind address UDP\n", argv[0]);
+		printf("%s: unable to bind address UDP\n", argv[0]);
 		exit(1);
 	}
 
@@ -283,9 +285,8 @@ char *argv[];
 					if (cc == -1)
 					{
 						perror(argv[0]);
-						fflush(stdout);
-						fflush(stdout);
-						("%s: recvfrom error\n", argv[0]);
+
+						printf("%s: recvfrom error\n", argv[0]);
 						fflush(stdout);
 
 						exit(1);
@@ -303,7 +304,7 @@ char *argv[];
 		close(s_TCP);
 		fflush(stdout);
 		fflush(stdout);
-		("\nFin de programa servidor!\n");
+		printf("\nFin de programa servidor!\n");
 		fflush(stdout);
 
 	default: /* Parent process comes here. */
@@ -323,6 +324,7 @@ char *argv[];
  */
 void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 {
+
 	char buf[TAM_BUFFER];	/* This example uses TAM_BUFFER byte messages. */
 	char hostname[MAXHOST]; /* remote host's name string */
 
@@ -392,15 +394,15 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 	int numberOfLines;
 	char **matrizPreguntas = readArchivoPreguntas("archivopreguntas.txt", &numberOfLines);
 	fflush(stdout);
-	fflush(stdout);
-	("Numero de lineas: %d\n", numberOfLines);
+	char *logfile = "log.log";
+	printf("Numero de lineas: %d\n", numberOfLines);
 	char **matrizRespuestas = readArchivoRespuestas("archivorespuestas.txt");
 
 	if (matrizPreguntas == NULL)
 	{
 		fflush(stdout);
 		fflush(stdout);
-		("FATAL!: No se pudo leer el archivo de preguntas!\n");
+		printf("FATAL!: No se pudo leer el archivo de preguntas!\n");
 		fflush(stdout);
 
 		exit(1);
@@ -409,38 +411,45 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 	{
 		fflush(stdout);
 		fflush(stdout);
-		("FATAL!: No se pudo leer el archivo de respuestas!\n");
+		printf("FATAL!: No se pudo leer el archivo de respuestas!\n");
 		fflush(stdout);
 
 		exit(1);
 	}
 	send(sock, "220 SERVICIO PREPARADO\r\n", sizeof("220 SERVICIO PREPARADO\r\n"), 0);
-	int intentosJuego = 5;
-	int acierto = 0;
-	int siguienteRonda = 0;
+	int intentosJuego = 15;
 	int index;
-
+	int next = 0;
 	char *lineofFileofQuestions;
 
 	while (1)
 	{
-		if(esAdios(buf))
+
+		recv(sock, buf, TAM_BUFFER, 0);
+		if (esAdios(buf))
 		{
+			printf("C:%s", buf);
+
 			break;
 		}
-		recv(sock, buf, TAM_BUFFER, 0);
-		printf("C:%s", buf);
-		fflush(stdout);
+		
+		
 
-		if (strcmp(buf, HOLA) == 0)
+		if (strcmp(buf, HOLA) == 0 || next == 1)
 		{
+			next = 0;
 			lineofFileofQuestions = getRandomQuestion(matrizPreguntas, &index);
 
 			lineofFileofQuestions[strlen(lineofFileofQuestions) - 1] = '\0';
 
 			char response[TAM_BUFFER] = "250 ";
 			sprintf(response, "250 %s#%d\r\n", lineofFileofQuestions, intentosJuego);
-			send(sock, response, TAM_BUFFER, 0);
+			len = send(sock, response, TAM_BUFFER, 0);
+			if (len == -1)
+			{
+				perror("Error al enviar");
+				exit(1);
+			}
 
 			char *respuesta = getAnswerFromIndex(index, matrizRespuestas);
 			respuesta[strlen(respuesta) - 1] = '\0';
@@ -450,53 +459,64 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 
 			do
 			{
-				sleep(1);	
 				// Recibir respuesta del cliente
-				recv(sock, buf, TAM_BUFFER, 0);
+				sleep(1);
+				len = recv(sock, buf, TAM_BUFFER, 0);
+				if (len == -1)
+				{
+					perror("Error al recibir");
+					exit(1);
+				}
 				printf("C:%s", buf);
 				fflush(stdout);
+
 				
+
 				if (atoi(buf) > atoi(respuesta))
 				{
 					intentosJuego--;
 					sprintf(esMayoroMenor, "354 %s#%d", MENOR, intentosJuego);
 					strcat(esMayoroMenor, "\r\n");
-					send(sock, esMayoroMenor, TAM_BUFFER, 0);
+					len = send(sock, esMayoroMenor, TAM_BUFFER, 0);
+					if (len == -1)
+					{
+						perror("Error al enviar");
+						exit(1);
+					}
 				}
 				if (atoi(buf) < atoi(respuesta))
 				{
 					intentosJuego--;
 					sprintf(esMayoroMenor, "354 %s#%d", MAYOR, intentosJuego);
 					strcat(esMayoroMenor, "\r\n");
-					send(sock, esMayoroMenor, TAM_BUFFER, 0);
+					len = send(sock, esMayoroMenor, TAM_BUFFER, 0);
 				}
 				if (atoi(buf) == atoi(respuesta))
 				{
+					len = send(sock, ACIERTO, sizeof(ACIERTO), 0);
+					if (len == -1)
+					{
+						perror("Error al enviar");
+						exit(1);
+					}
 
-					send(sock, ACIERTO, sizeof(ACIERTO), 0);
-					// Enviar nueva pregunta
-					lineofFileofQuestions = getRandomQuestion(matrizPreguntas, &index);
-					lineofFileofQuestions[strlen(lineofFileofQuestions) - 1] = '\0';
-					sprintf(response, "250 %s#%d\r\n", lineofFileofQuestions, intentosJuego);
-					send(sock, response, TAM_BUFFER, 0);
-					respuesta = getAnswerFromIndex(index, matrizRespuestas);
-					respuesta[strlen(respuesta) - 1] = '\0';
-					strcat(respuesta, "\r\n");
+					next = 1;
 				}
 
-			} while (strcmp(buf,ADIOS)!=0);
-		}
-		else if (esAdios(buf))
-		{
-			
-			break;
+			} while (!next);
 		}
 		else
 		{
-			send(sock, SYNTAX_ERROR, sizeof(SYNTAX_ERROR), 0);
+			len = send(sock, SYNTAX_ERROR, sizeof(SYNTAX_ERROR), 0);
+			if (len == -1)
+			{
+				perror("Error al enviar");
+				exit(1);
+			}
 			continue;
 		}
 	}
+
 	/* Log a finishing message. */
 }
 
@@ -578,4 +598,21 @@ char *getAnswerFromIndex(int index, char **matrizPreguntas)
 int esAdios(char *buffer)
 {
 	return strcmp(buffer, ADIOS) == 0 ? 1 : 0;
+}
+int createLog(char *filename)
+{
+	FILE *file = fopen(filename, "w");
+	// check if exists, if not, create, if exists, append
+	if (file == NULL)
+	{
+		printf("No se pudo crear el archivo de log\n");
+		fflush(stdout);
+
+		return 1;
+	}
+	else
+	{
+		fclose(file);
+		return 0;
+	}
 }

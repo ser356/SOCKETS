@@ -145,7 +145,8 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
 
     while (fgets(buf, TAM_BUFFER, fp) != NULL)
     {
-
+        
+        
         tam = strlen(buf);
         // If the last char is \n, replace it with \0
         if (tam > 0 && buf[tam - 1] == '\n')
@@ -164,7 +165,7 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
             fprintf(stderr, "%s: Imposible enviar\n", program);
             intentos++;
         }
-        memset(buf, 0, TAM_BUFFER);
+        
         // Data receiving from server
         len = recv(s, buf, TAM_BUFFER, 0);
         if (len == -1)
@@ -174,21 +175,23 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
             intentos++;
         }
 
-        printf("S: %s", buf);
+        
+       
+        printf("S:%s", buf);
         fflush(stdout);
 
         intentos++;
     }
 
-    
+   
 
     fclose(fp);
     free(file);
 
     /* Print message indicating completion of task. */
-    sleep(1);
+    sleep(3);
     time(&timevar);
-    printf("All done at %s", (char *)ctime(&timevar));
+    printf("Closing down at %s", (char *)ctime(&timevar));
     fflush(stdout);
 
     close(s);
