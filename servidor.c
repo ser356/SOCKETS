@@ -424,6 +424,8 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 
 	while (1)
 	{
+		if(esAdios(buf))
+			break;	
 		recv(sock, buf, TAM_BUFFER, 0);
 		printf("C:%s", buf);
 		fflush(stdout);
@@ -451,11 +453,7 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 				recv(sock, buf, TAM_BUFFER, 0);
 				printf("C:%s", buf);
 				fflush(stdout);
-				if (esAdios(buf))
-				{
-					send(sock, ADIOS, sizeof(ADIOS), 0);
-					break;
-				}
+				
 				if (atoi(buf) > atoi(respuesta))
 				{
 					intentosJuego--;
@@ -484,7 +482,7 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 					strcat(respuesta, "\r\n");
 				}
 
-			} while (1);
+			} while (strcmp(buf,ADIOS)!=0);
 		}
 		else if (esAdios(buf))
 		{
