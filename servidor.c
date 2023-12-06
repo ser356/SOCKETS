@@ -425,7 +425,9 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 	while (1)
 	{
 		if(esAdios(buf))
-			break;	
+		{
+			break;
+		}
 		recv(sock, buf, TAM_BUFFER, 0);
 		printf("C:%s", buf);
 		fflush(stdout);
@@ -457,14 +459,14 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 				if (atoi(buf) > atoi(respuesta))
 				{
 					intentosJuego--;
-					sprintf(esMayoroMenor, "354 %s#%d", MAYOR, intentosJuego);
+					sprintf(esMayoroMenor, "354 %s#%d", MENOR, intentosJuego);
 					strcat(esMayoroMenor, "\r\n");
 					send(sock, esMayoroMenor, TAM_BUFFER, 0);
 				}
 				if (atoi(buf) < atoi(respuesta))
 				{
 					intentosJuego--;
-					sprintf(esMayoroMenor, "354 %s#%d", MENOR, intentosJuego);
+					sprintf(esMayoroMenor, "354 %s#%d", MAYOR, intentosJuego);
 					strcat(esMayoroMenor, "\r\n");
 					send(sock, esMayoroMenor, TAM_BUFFER, 0);
 				}
@@ -486,7 +488,7 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 		}
 		else if (esAdios(buf))
 		{
-			send(sock, ADIOS, sizeof(ADIOS), 0);
+			
 			break;
 		}
 		else
@@ -495,7 +497,6 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 			continue;
 		}
 	}
-
 	/* Log a finishing message. */
 }
 

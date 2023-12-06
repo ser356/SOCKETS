@@ -180,6 +180,8 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
         intentos++;
     }
 
+    
+
     fclose(fp);
     free(file);
 
