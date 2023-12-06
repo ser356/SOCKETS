@@ -479,7 +479,7 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 				// Verificar si el cliente envió "ADIOS"
 				if (strcmp(buf, "ADIOS\r\n") == 0)
 				{
-					len = send(sock, "221 ADIOS\r\n", sizeof("221 ADIOS\r\n"), 0);
+					len = send(sock, ADIOS, sizeof(ADIOS), 0);
 					if (len == -1)
 					{
 						perror("Error al enviar");
