@@ -395,98 +395,84 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 	send(sock, "220 SERVICIO PREPARADO\r\n", sizeof("220 SERVICIO PREPARADO\r\n"), 0);
 	int intentosJuego = 5;
 	int acierto = 0;
+	int siguienteRonda = 0;
+	int index;
+
+	char *lineofFileofQuestions;
+
 	while (1)
 	{
-		memset(buf, 0, TAM_BUFFER);
-		len = recv(sock, buf, TAM_BUFFER, 0);
-		if (len == -1)
+		recv(sock, buf, TAM_BUFFER, 0);
+		printf("C:%s", buf);
+		if (strcmp(buf, HOLA) == 0)
 		{
-			perror("recv failed");
-			break;
-		}
-
-		printf("C: %s", buf);
-
-		int siguienteRonda = 0;
-		while (1)
-		{
-			int index = 0;
-
-			char *lineofFileofQuestions;
 			lineofFileofQuestions = getRandomQuestion(matrizPreguntas, &index);
-			if (strcmp(buf, HOLA) == 0 || siguienteRonda == 1)
+
+			lineofFileofQuestions[strlen(lineofFileofQuestions) - 1] = '\0';
+
+			char response[TAM_BUFFER] = "250 ";
+			sprintf(response, "250 %s#%d\r\n", lineofFileofQuestions, intentosJuego);
+			send(sock, response, TAM_BUFFER, 0);
+
+			char *respuesta = getAnswerFromIndex(index, matrizRespuestas);
+			respuesta[strlen(respuesta) - 1] = '\0';
+			strcat(respuesta, "\r\n");
+
+			char esMayoroMenor[TAM_BUFFER];
+
+			do
 			{
 
-				lineofFileofQuestions[strlen(lineofFileofQuestions) - 1] = '\0';
-
-				char response[TAM_BUFFER] = "250 ";
-				sprintf(response, "250 %s#%d\r\n", lineofFileofQuestions, intentosJuego);
-				send(sock, response, TAM_BUFFER, 0);
-				memset(buf, 0, TAM_BUFFER);
-				len = recv(sock, buf, TAM_BUFFER, 0);
-
-				if (len == -1)
-				{
-					perror("recv failed");
+				// Recibir respuesta del cliente
+				sleep(1);
+				recv(sock, buf, TAM_BUFFER, 0);
+				printf("C:%s", buf);
+				if(esAdios(buf)){
+					send(sock, ADIOS, sizeof(ADIOS), 0);
 					break;
 				}
-
-				printf("C:%s", buf);
-
-				char *respuesta = getAnswerFromIndex(index, matrizRespuestas);
-				respuesta[strlen(respuesta) - 1] = '\0';
-				strcat(respuesta, "\r\n");
-
-				while (strcmp(buf, respuesta) != 0)
+				if (atoi(buf) > atoi(respuesta))
 				{
-
-					char esMayoroMenor[TAM_BUFFER];
-
-					if (atoi(buf) > atoi(respuesta))
-					{
-						intentosJuego--;
-						sprintf(esMayoroMenor, "354 %s#%d", MAYOR, intentosJuego);
-					}
-					if (atoi(buf) < atoi(respuesta))
-					{
-						intentosJuego--;
-						sprintf(esMayoroMenor, "354 %s#%d", MENOR, intentosJuego);
-					}
-					// add  \r\n to the end of the message
+					intentosJuego--;
+					sprintf(esMayoroMenor, "354 %s#%d", MAYOR, intentosJuego);
 					strcat(esMayoroMenor, "\r\n");
-
 					send(sock, esMayoroMenor, TAM_BUFFER, 0);
-					len = recv(sock, buf, TAM_BUFFER, 0);
-					if (len == -1)
-					{
-						perror("recv failed");
-						break;
-					}
-					printf("C:%s", buf);
 				}
-
-				if (intentosJuego == 0)
+				if (atoi(buf) < atoi(respuesta))
 				{
-					printf("El cliente se quedó sin intentos\n");
+					intentosJuego--;
+					sprintf(esMayoroMenor, "354 %s#%d", MENOR, intentosJuego);
+					strcat(esMayoroMenor, "\r\n");
+					send(sock, esMayoroMenor, TAM_BUFFER, 0);
 				}
-
-				if (strcmp(buf, respuesta) == 0)
+				if (atoi(buf) == atoi(respuesta))
 				{
-					siguienteRonda = 1;
+
 					send(sock, ACIERTO, sizeof(ACIERTO), 0);
-					continue;
+					// Enviar nueva pregunta
+					lineofFileofQuestions = getRandomQuestion(matrizPreguntas, &index);
+					lineofFileofQuestions[strlen(lineofFileofQuestions) - 1] = '\0';
+					sprintf(response, "250 %s#%d\r\n", lineofFileofQuestions, intentosJuego);
+					send(sock, response, TAM_BUFFER, 0);
+					respuesta = getAnswerFromIndex(index, matrizRespuestas);
+					respuesta[strlen(respuesta) - 1] = '\0';
+					strcat(respuesta, "\r\n");
+
+
 				}
-			}
-			else if (esAdios(buf))
-			{
-				send(sock, ADIOS, sizeof(ADIOS), 0);
-				break;
-			}
-			else
-			{
-				send(sock, SYNTAX_ERROR, sizeof(SYNTAX_ERROR), 0);
-				break;
-			}
+
+				
+			} while (1);
+		}
+		else if (esAdios(buf))
+		{
+			send(sock, ADIOS, sizeof(ADIOS), 0);
+			break;
+		}
+		else
+		{
+			send(sock, SYNTAX_ERROR, sizeof(SYNTAX_ERROR), 0);
+			continue;
 		}
 	}
 

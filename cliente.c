@@ -171,7 +171,7 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
             fprintf(stderr, "%s: Imposible recibir\n", program);
             intentos++;
         }
-
+       
         printf("S: %s", buf);
 
         intentos++;
