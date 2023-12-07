@@ -428,21 +428,19 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 		recv(sock, buf, TAM_BUFFER, 0);
 		if (esAdios(buf))
 		{
-			
 
 			break;
 		}
 
-		if(strcmp(buf, "HOLA\r\n") == 0)
+		if (strcmp(buf, "HOLA\r\n") == 0)
 		{
-			
+
 			printf("C:%s", buf);
 		}
 
 		if (strcmp(buf, HOLA) == 0 || next == 1)
 		{
-			
-			
+
 			next = 0;
 			lineofFileofQuestions = getRandomQuestion(matrizPreguntas, &index);
 
@@ -476,52 +474,62 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 				printf("C:%s", buf);
 				fflush(stdout);
 
-				// Verificar si el cliente envió "ADIOS"
-				if (strcmp(buf, "ADIOS\r\n") == 0)
-				{
-					len = send(sock, ADIOS, sizeof(ADIOS), 0);
-					if (len == -1)
+				if (atoi(buf) != 0 || strcmp(buf, ADIOS) == 0)
+				{ // Verificar si el cliente envió "ADIOS"
+					if (strcmp(buf, "ADIOS\r\n") == 0)
 					{
-						perror("Error al enviar");
-						exit(1);
-					}
-					break;
-				}
-
-				if (atoi(buf) > atoi(respuesta))
-				{
-					intentosJuego--;
-					sprintf(esMayoroMenor, "354 %s#%d", MENOR, intentosJuego);
-					strcat(esMayoroMenor, "\r\n");
-					len = send(sock, esMayoroMenor, TAM_BUFFER, 0);
-					if (len == -1)
-					{
-						perror("Error al enviar");
-						exit(1);
-					}
-				}
-				if (atoi(buf) < atoi(respuesta))
-				{
-					intentosJuego--;
-					sprintf(esMayoroMenor, "354 %s#%d", MAYOR, intentosJuego);
-					strcat(esMayoroMenor, "\r\n");
-					len = send(sock, esMayoroMenor, TAM_BUFFER, 0);
-				}
-				if (atoi(buf) == atoi(respuesta))
-				{
-					len = send(sock, ACIERTO, sizeof(ACIERTO), 0);
-					if (len == -1)
-					{
-						perror("Error al enviar");
-						exit(1);
+						len = send(sock, ADIOS, sizeof(ADIOS), 0);
+						if (len == -1)
+						{
+							perror("Error al enviar");
+							exit(1);
+						}
+						break;
 					}
 
-					next = 1;
-					
+					if (atoi(buf) > atoi(respuesta))
+					{
+						intentosJuego--;
+						sprintf(esMayoroMenor, "354 %s#%d", MENOR, intentosJuego);
+						strcat(esMayoroMenor, "\r\n");
+						len = send(sock, esMayoroMenor, TAM_BUFFER, 0);
+						if (len == -1)
+						{
+							perror("Error al enviar");
+							exit(1);
+						}
+					}
+					if (atoi(buf) < atoi(respuesta))
+					{
+						intentosJuego--;
+						sprintf(esMayoroMenor, "354 %s#%d", MAYOR, intentosJuego);
+						strcat(esMayoroMenor, "\r\n");
+						len = send(sock, esMayoroMenor, TAM_BUFFER, 0);
+					}
+					if (atoi(buf) == atoi(respuesta))
+					{
+						len = send(sock, ACIERTO, sizeof(ACIERTO), 0);
+						if (len == -1)
+						{
+							perror("Error al enviar");
+							exit(1);
+						}
+
+						next = 1;
+					}
+				}
+				else
+				{
+					len = send(sock, SYNTAX_ERROR, sizeof(SYNTAX_ERROR), 0);
+					if (len == -1)
+					{
+						perror("Error al enviar");
+						exit(1);
+					}
+					continue;
 				}
 
 			} while (!next);
-
 		}
 		else
 		{
