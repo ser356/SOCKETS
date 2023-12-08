@@ -1,148 +1,483 @@
+===================================================================
+STARTING LOG AT Fri Dec  8 15:43:33 2023
 NUMERO DE LINEAS LEIDAS: 10
-S:220 SERVICIO PREPARADO
-C:dd
-S:500 Error de sintaxis
-C:HOLA
-S:250 ¿Cuántos jugadores hay en un equipo de rugby#15
-C:RESPUESTA 50
-S:350 ACIERTO
-S:250 ¿Cuántos metros mide una pista de atletismo?#15
-C:1
-S:500 Error de sintaxis
-C:3
-S:500 Error de sintaxis
-C:3
-S:500 Error de sintaxis
-C:1
-S:500 Error de sintaxis
-C:1
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:ADIOS
-S:ADIOS
+===================================================================
+SERVER SENDING at Fri Dec  8 15:43:33 2023 on PORT 37150|localhost|0.0.0.0|TCP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Fri Dec  8 15:43:33 2023|localhost|127.0.0.1|TCP|HOLA
+===================================================================
+SERVER SENDING at Fri Dec  8 15:43:33 2023|localhost|0.0.0.0|TCP|250 ¿Cuántos jugadores hay en un equipo de voleibol?#5
+===================================================================
+RECEIVED at Fri Dec  8 15:43:34 2023|localhost|127.0.0.1|TCP|dd
+===================================================================
+SERVER SENDING at Fri Dec  8 15:43:34 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:43:35 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 15:43:35 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:43:36 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 15:43:36 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:43:37 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 15:43:37 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:43:38 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 15:43:38 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+SERVER SENDING at Fri Dec  8 15:43:38 2023|localhost|0.0.0.0|TCP|375 FALLO
+RECEIVED AT Fri Dec  8 15:43:38 2023|localhost|127.0.0.1|TCP|RESPUESTA 1
+
+SERVER SENDING at Fri Dec  8 15:43:38 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED AT Fri Dec  8 15:43:38 2023|localhost|127.0.0.1|TCP|2
+
+SERVER SENDING at Fri Dec  8 15:43:38 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED AT Fri Dec  8 15:43:38 2023|localhost|127.0.0.1|TCP|2
+
+SERVER SENDING at Fri Dec  8 15:43:38 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED AT Fri Dec  8 15:43:38 2023|localhost|127.0.0.1|TCP|2
+
+SERVER SENDING at Fri Dec  8 15:43:38 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED AT Fri Dec  8 15:43:38 2023|localhost|127.0.0.1|TCP|2
+
+SERVER SENDING at Fri Dec  8 15:43:38 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+===================================================================
+STARTING LOG AT Fri Dec  8 15:44:47 2023
 NUMERO DE LINEAS LEIDAS: 10
-S:220 SERVICIO PREPARADO
-C:dd
-S:500 Error de sintaxis
-C:HOLA
-S:250 ¿Cuántos jugadores hay en un equipo de rugby#15
-C:RESPUESTA 50
-S:350 ACIERTO
-S:250 ¿Cuántos metros mide una pista de atletismo?#15
-C:1
-S:500 Error de sintaxis
-C:3
-S:500 Error de sintaxis
-C:3
-S:500 Error de sintaxis
-C:RESPUESTA 100
-S:354 MAYOR#14
-C:RESPUESTA 1
-S:354 MAYOR#13
-C:2
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:ADIOS
-S:ADIOS
+===================================================================
+SERVER SENDING at Fri Dec  8 15:44:47 2023 on PORT 50228|localhost|0.0.0.0|TCP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Fri Dec  8 15:44:47 2023|localhost|127.0.0.1|TCP|HOLA
+===================================================================
+SERVER SENDING at Fri Dec  8 15:44:47 2023|localhost|0.0.0.0|TCP|250 ¿Cuántos jugadores hay en un equipo de rugby#5
+===================================================================
+RECEIVED at Fri Dec  8 15:44:48 2023|localhost|127.0.0.1|TCP|dd
+===================================================================
+SERVER SENDING at Fri Dec  8 15:44:48 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:44:49 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 15:44:49 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:44:50 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 15:44:50 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:44:51 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 15:44:51 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:44:52 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 15:44:52 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+SERVER SENDING at Fri Dec  8 15:44:52 2023|localhost|0.0.0.0|TCP|375 FALLO
+===================================================================
+STARTING LOG AT Fri Dec  8 15:52:03 2023
 NUMERO DE LINEAS LEIDAS: 10
-S:220 SERVICIO PREPARADO
-C:dd
-S:500 Error de sintaxis
-C:HOLA
-S:250 ¿Cuántos metros mide una pista de atletismo?#15
-C:RESPUESTA 50
-S:354 MAYOR#14
-C:-1
-S:500 Error de sintaxis
-C:1
-S:500 Error de sintaxis
-C:3
-S:500 Error de sintaxis
-C:3
-S:500 Error de sintaxis
-C:RESPUESTA 100
-S:354 MAYOR#13
-C:RESPUESTA 1
-S:354 MAYOR#12
-C:2
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:ADIOS
-S:ADIOS
+===================================================================
+SERVER SENDING at Fri Dec  8 15:52:03 2023 on PORT 59252|localhost|0.0.0.0|TCP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Fri Dec  8 15:52:03 2023|localhost|127.0.0.1|TCP|HOLA
+===================================================================
+SERVER SENDING at Fri Dec  8 15:52:03 2023|localhost|0.0.0.0|TCP|250 ¿Cuántos jugadores hay en un equipo de voleibol?#5
+===================================================================
+RECEIVED at Fri Dec  8 15:52:04 2023|localhost|127.0.0.1|TCP|dd
+===================================================================
+SERVER SENDING at Fri Dec  8 15:52:04 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:52:05 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 15:52:05 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:52:06 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 15:52:06 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:52:07 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 15:52:07 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:52:08 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 15:52:08 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+SERVER SENDING at Fri Dec  8 15:52:08 2023|localhost|0.0.0.0|TCP|375 FALLO
+===================================================================
+STARTING LOG AT Fri Dec  8 15:53:28 2023
 NUMERO DE LINEAS LEIDAS: 10
-S:220 SERVICIO PREPARADO
-C:dd
-S:500 Error de sintaxis
-C:HOLA
-S:250 ¿Cuántos minutos dura un partido de baloncesto?#15
-C:RESPUESTA 50
-S:354 MAYOR#14
-C:-1
-S:500 Error de sintaxis
-C:1
-S:500 Error de sintaxis
-C:3
-S:500 Error de sintaxis
-C:3
-S:500 Error de sintaxis
-C:RESPUESTA 100
-S:354 MAYOR#13
-C:RESPUESTA 1
-S:354 MAYOR#12
-C:2
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:ADIOS
-S:ADIOS
+===================================================================
+SERVER SENDING at Fri Dec  8 15:53:28 2023 on PORT 39494|localhost|0.0.0.0|TCP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Fri Dec  8 15:53:28 2023|localhost|127.0.0.1|TCP|HOLA
+===================================================================
+SERVER SENDING at Fri Dec  8 15:53:28 2023|localhost|0.0.0.0|TCP|250 ¿Cuántos jugadores hay en un equipo de rugby#5
+===================================================================
+RECEIVED at Fri Dec  8 15:53:29 2023|localhost|127.0.0.1|TCP|dd
+===================================================================
+SERVER SENDING at Fri Dec  8 15:53:29 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:53:30 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 15:53:30 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:53:31 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 15:53:31 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:53:32 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 15:53:32 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:53:33 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 15:53:33 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+SERVER SENDING at Fri Dec  8 15:53:33 2023|localhost|0.0.0.0|TCP|375 FALLO
+===================================================================
+STARTING LOG AT Fri Dec  8 15:54:53 2023
 NUMERO DE LINEAS LEIDAS: 10
-S:220 SERVICIO PREPARADO
-C:dd
-S:500 Error de sintaxis
-C:HOLA
-S:250 ¿Cuántos jugadores hay en un equipo de baloncesto?#15
-C:RESPUESTA 50
-S:354 MAYOR#14
-C:-1
-S:500 Error de sintaxis
-C:1
-S:500 Error de sintaxis
-C:3
-S:500 Error de sintaxis
-C:3
-S:500 Error de sintaxis
-C:RESPUESTA 100
-S:354 MAYOR#13
-C:RESPUESTA 1
-S:354 MAYOR#12
-C:2
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:ADIOS
-S:ADIOS
+===================================================================
+SERVER SENDING at Fri Dec  8 15:54:53 2023 on PORT 56594|localhost|0.0.0.0|TCP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Fri Dec  8 15:54:53 2023|localhost|127.0.0.1|TCP|HOLA
+===================================================================
+SERVER SENDING at Fri Dec  8 15:54:53 2023|localhost|0.0.0.0|TCP|250 ¿Cuántos jugadores hay en un equipo de rugby#5
+===================================================================
+RECEIVED at Fri Dec  8 15:54:54 2023|localhost|127.0.0.1|TCP|dd
+===================================================================
+SERVER SENDING at Fri Dec  8 15:54:54 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:54:55 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 15:54:55 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:54:56 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 15:54:56 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:54:57 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 15:54:57 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:54:58 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 15:54:58 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+SERVER SENDING at Fri Dec  8 15:54:58 2023|localhost|0.0.0.0|TCP|375 FALLO
+===================================================================
+STARTING LOG AT Fri Dec  8 15:58:15 2023
+NUMERO DE LINEAS LEIDAS: 10
+===================================================================
+SERVER SENDING at Fri Dec  8 15:58:15 2023 on PORT 44464|localhost|0.0.0.0|TCP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Fri Dec  8 15:58:15 2023|localhost|127.0.0.1|TCP|HOLA
+===================================================================
+SERVER SENDING at Fri Dec  8 15:58:15 2023|localhost|0.0.0.0|TCP|250 ¿Cuántos jugadores hay en un equipo de baloncesto?#5
+===================================================================
+RECEIVED at Fri Dec  8 15:58:16 2023|localhost|127.0.0.1|TCP|dd
+===================================================================
+SERVER SENDING at Fri Dec  8 15:58:16 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:58:17 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 15:58:17 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:58:18 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 15:58:18 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:58:19 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 15:58:19 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED at Fri Dec  8 15:58:20 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 15:58:20 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+SERVER SENDING at Fri Dec  8 15:58:20 2023|localhost|0.0.0.0|TCP|375 FALLO
+===================================================================
+STARTING LOG AT Fri Dec  8 16:02:39 2023
+NUMERO DE LINEAS LEIDAS: 10
+===================================================================
+SERVER SENDING at Fri Dec  8 16:02:39 2023 on PORT 53412|localhost|0.0.0.0|TCP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Fri Dec  8 16:02:39 2023|localhost|127.0.0.1|TCP|HOLA
+===================================================================
+SERVER SENDING at Fri Dec  8 16:02:39 2023|localhost|0.0.0.0|TCP|250 ¿Cuántos metros mide una pista de atletismo?#5
+===================================================================
+RECEIVED at Fri Dec  8 16:02:40 2023|localhost|127.0.0.1|TCP|dd
+===================================================================
+SERVER SENDING at Fri Dec  8 16:02:40 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#4
+===================================================================
+RECEIVED at Fri Dec  8 16:02:41 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 16:02:41 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#3
+===================================================================
+RECEIVED at Fri Dec  8 16:02:42 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 16:02:42 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#2
+===================================================================
+RECEIVED at Fri Dec  8 16:02:43 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 16:02:43 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#1
+===================================================================
+RECEIVED at Fri Dec  8 16:02:44 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 16:02:44 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#0
+===================================================================
+SERVER SENDING at Fri Dec  8 16:02:44 2023|localhost|0.0.0.0|TCP|375 FALLO
+===================================================================
+STARTING LOG AT Fri Dec  8 16:04:21 2023
+NUMERO DE LINEAS LEIDAS: 10
+===================================================================
+SERVER SENDING at Fri Dec  8 16:04:21 2023 on PORT 49086|localhost|0.0.0.0|TCP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Fri Dec  8 16:04:21 2023|localhost|127.0.0.1|TCP|HOLA
+===================================================================
+SERVER SENDING at Fri Dec  8 16:04:21 2023|localhost|0.0.0.0|TCP|250 ¿Cuántos hoyos tiene un campo de golf?#5
+===================================================================
+RECEIVED at Fri Dec  8 16:04:22 2023|localhost|127.0.0.1|TCP|dd
+===================================================================
+SERVER SENDING at Fri Dec  8 16:04:22 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#4
+===================================================================
+RECEIVED at Fri Dec  8 16:04:23 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 16:04:23 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#3
+===================================================================
+RECEIVED at Fri Dec  8 16:04:24 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 16:04:24 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#2
+===================================================================
+RECEIVED at Fri Dec  8 16:04:25 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 16:04:25 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#1
+===================================================================
+RECEIVED at Fri Dec  8 16:04:26 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 16:04:26 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#0
+===================================================================
+SERVER SENDING at Fri Dec  8 16:04:26 2023|localhost|0.0.0.0|TCP|375 FALLO
+===================================================================
+STARTING LOG AT Fri Dec  8 16:05:09 2023
+NUMERO DE LINEAS LEIDAS: 10
+===================================================================
+SERVER SENDING at Fri Dec  8 16:05:09 2023 on PORT 50608|localhost|0.0.0.0|TCP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Fri Dec  8 16:05:09 2023|localhost|127.0.0.1|TCP|HOLA
+===================================================================
+SERVER SENDING at Fri Dec  8 16:05:09 2023|localhost|0.0.0.0|TCP|250 ¿Cuántos jugadores hay en un equipo de baloncesto?#5
+===================================================================
+RECEIVED at Fri Dec  8 16:05:10 2023|localhost|127.0.0.1|TCP|dd
+===================================================================
+SERVER SENDING at Fri Dec  8 16:05:10 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#4
+===================================================================
+RECEIVED at Fri Dec  8 16:05:11 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 16:05:11 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#3
+===================================================================
+RECEIVED at Fri Dec  8 16:05:12 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 16:05:12 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#2
+===================================================================
+RECEIVED at Fri Dec  8 16:05:13 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 16:05:13 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#1
+===================================================================
+RECEIVED at Fri Dec  8 16:05:14 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 16:05:14 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#0
+===================================================================
+SERVER SENDING at Fri Dec  8 16:05:14 2023|localhost|0.0.0.0|TCP|375 FALLO
+===================================================================
+STARTING LOG AT Fri Dec  8 16:05:45 2023
+NUMERO DE LINEAS LEIDAS: 10
+===================================================================
+SERVER SENDING at Fri Dec  8 16:05:45 2023 on PORT 51994|localhost|0.0.0.0|TCP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Fri Dec  8 16:05:45 2023|localhost|127.0.0.1|TCP|HOLA
+===================================================================
+SERVER SENDING at Fri Dec  8 16:05:45 2023|localhost|0.0.0.0|TCP|250 ¿Cuántos jugadores hay en un equipo de baloncesto?#5
+===================================================================
+RECEIVED at Fri Dec  8 16:05:47 2023|localhost|127.0.0.1|TCP|dd
+===================================================================
+SERVER SENDING at Fri Dec  8 16:05:47 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#4
+===================================================================
+RECEIVED at Fri Dec  8 16:05:48 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 16:05:48 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#3
+===================================================================
+RECEIVED at Fri Dec  8 16:05:49 2023|localhost|127.0.0.1|TCP|-1
+===================================================================
+SERVER SENDING at Fri Dec  8 16:05:49 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#2
+===================================================================
+RECEIVED at Fri Dec  8 16:05:50 2023|localhost|127.0.0.1|TCP|-+
+===================================================================
+SERVER SENDING at Fri Dec  8 16:05:50 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#1
+===================================================================
+RECEIVED at Fri Dec  8 16:05:51 2023|localhost|127.0.0.1|TCP|RESPUESTA 1
+===================================================================
+SERVER SENDING at Fri Dec  8 16:05:51 2023|localhost|0.0.0.0|TCP|350 ACIERTO
+===================================================================
+SERVER SENDING at Fri Dec  8 16:05:51 2023|localhost|0.0.0.0|TCP|250 ¿Cuántos puntos vale un touchdown en fútbol americano?#1
+===================================================================
+RECEIVED at Fri Dec  8 16:05:52 2023|localhost|127.0.0.1|TCP|2
+===================================================================
+SERVER SENDING at Fri Dec  8 16:05:52 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#0
+===================================================================
+SERVER SENDING at Fri Dec  8 16:05:52 2023|localhost|0.0.0.0|TCP|375 FALLO
+===================================================================
+STARTING LOG AT Fri Dec  8 16:07:19 2023
+NUMERO DE LINEAS LEIDAS: 10
+===================================================================
+SERVER SENDING at Fri Dec  8 16:07:19 2023 on PORT 43940|localhost|0.0.0.0|TCP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Fri Dec  8 16:07:19 2023|localhost|127.0.0.1|TCP|HOLA
+===================================================================
+SERVER SENDING at Fri Dec  8 16:07:19 2023|localhost|0.0.0.0|TCP|250 ¿Cuántos jugadores hay en un equipo de baloncesto?#5
+===================================================================
+RECEIVED at Fri Dec  8 16:07:20 2023|localhost|127.0.0.1|TCP|dd
+===================================================================
+SERVER SENDING at Fri Dec  8 16:07:20 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#4
+===================================================================
+RECEIVED at Fri Dec  8 16:07:21 2023|localhost|127.0.0.1|TCP|RESPUESTA 1
+===================================================================
+SERVER SENDING at Fri Dec  8 16:07:21 2023|localhost|0.0.0.0|TCP|350 ACIERTO
+===================================================================
+SERVER SENDING at Fri Dec  8 16:07:21 2023|localhost|0.0.0.0|TCP|250 ¿Cuántos puntos vale un touchdown en fútbol americano?#4
+===================================================================
+RECEIVED at Fri Dec  8 16:07:22 2023|localhost|127.0.0.1|TCP|2
+===================================================================
+SERVER SENDING at Fri Dec  8 16:07:22 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#3
+===================================================================
+RECEIVED at Fri Dec  8 16:07:23 2023|localhost|127.0.0.1|TCP|2
+===================================================================
+SERVER SENDING at Fri Dec  8 16:07:23 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#2
+===================================================================
+RECEIVED at Fri Dec  8 16:07:24 2023|localhost|127.0.0.1|TCP|2
+===================================================================
+SERVER SENDING at Fri Dec  8 16:07:24 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#1
+===================================================================
+RECEIVED at Fri Dec  8 16:07:25 2023|localhost|127.0.0.1|TCP|ADIOS
+===================================================================
+CLOSING at Fri Dec  8 16:07:25 2023 on PORT 43940 |localhost|127.0.0.1|TCP|ADIOS
+===================================================================
+===================================================================
+STARTING LOG AT Fri Dec  8 16:10:11 2023
+NUMERO DE LINEAS LEIDAS: 10
+===================================================================
+SERVER SENDING at Fri Dec  8 16:10:11 2023 on PORT 50814|localhost|0.0.0.0|TCP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Fri Dec  8 16:10:11 2023|localhost|127.0.0.1|TCP|HOLA
+===================================================================
+SERVER SENDING at Fri Dec  8 16:10:11 2023|localhost|0.0.0.0|TCP|250 ¿Cuántos rounds hay en una pelea de boxeo?#5
+===================================================================
+RECEIVED at Fri Dec  8 16:10:12 2023|localhost|127.0.0.1|TCP|dd
+===================================================================
+SERVER SENDING at Fri Dec  8 16:10:12 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#4
+===================================================================
+RECEIVED at Fri Dec  8 16:10:13 2023|localhost|127.0.0.1|TCP|RESPUESTA 1
+===================================================================
+SERVER SENDING at Fri Dec  8 16:10:13 2023|localhost|0.0.0.0|TCP|350 ACIERTO
+===================================================================
+SERVER SENDING at Fri Dec  8 16:10:13 2023|localhost|0.0.0.0|TCP|250 ¿Cuántos minutos dura un partido de baloncesto?#4
+===================================================================
+RECEIVED at Fri Dec  8 16:10:14 2023|localhost|127.0.0.1|TCP|2
+===================================================================
+SERVER SENDING at Fri Dec  8 16:10:14 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#3
+===================================================================
+RECEIVED at Fri Dec  8 16:10:15 2023|localhost|127.0.0.1|TCP|2
+===================================================================
+SERVER SENDING at Fri Dec  8 16:10:15 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#2
+===================================================================
+RECEIVED at Fri Dec  8 16:10:16 2023|localhost|127.0.0.1|TCP|2
+===================================================================
+SERVER SENDING at Fri Dec  8 16:10:16 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#1
+===================================================================
+RECEIVED at Fri Dec  8 16:10:17 2023|localhost|127.0.0.1|TCP|ADIOS
+===================================================================
+CLOSING at Fri Dec  8 16:10:17 2023 on PORT 50814 |localhost|127.0.0.1|TCP|ADIOS
+===================================================================
+===================================================================
+STARTING LOG AT Fri Dec  8 16:16:48 2023
+NUMERO DE LINEAS LEIDAS: 10
+===================================================================
+SERVER SENDING at Fri Dec  8 16:16:48 2023 on PORT 52692|localhost|0.0.0.0|TCP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Fri Dec  8 16:16:48 2023|localhost|127.0.0.1|TCP|HOLA
+===================================================================
+SERVER SENDING at Fri Dec  8 16:16:48 2023|localhost|0.0.0.0|TCP|250 ¿Cuántos jugadores hay en un equipo de voleibol?#5
+===================================================================
+RECEIVED at Fri Dec  8 16:16:49 2023|localhost|127.0.0.1|TCP|dd
+===================================================================
+SERVER SENDING at Fri Dec  8 16:16:49 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#4
+===================================================================
+RECEIVED at Fri Dec  8 16:16:50 2023|localhost|127.0.0.1|TCP|RESPUESTA 1
+===================================================================
+SERVER SENDING at Fri Dec  8 16:16:50 2023|localhost|0.0.0.0|TCP|350 ACIERTO
+===================================================================
+SERVER SENDING at Fri Dec  8 16:16:50 2023|localhost|0.0.0.0|TCP|250 ¿Cuántos minutos dura un partido de baloncesto?#4
+===================================================================
+RECEIVED at Fri Dec  8 16:16:51 2023|localhost|127.0.0.1|TCP|2
+===================================================================
+SERVER SENDING at Fri Dec  8 16:16:51 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#3
+===================================================================
+RECEIVED at Fri Dec  8 16:16:52 2023|localhost|127.0.0.1|TCP|2
+===================================================================
+SERVER SENDING at Fri Dec  8 16:16:52 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#2
+===================================================================
+RECEIVED at Fri Dec  8 16:16:53 2023|localhost|127.0.0.1|TCP|2
+===================================================================
+SERVER SENDING at Fri Dec  8 16:16:53 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#1
+===================================================================
+RECEIVED at Fri Dec  8 16:16:54 2023|localhost|127.0.0.1|TCP|ADIOS
+===================================================================
+CLOSING at Fri Dec  8 16:16:54 2023 on PORT 52692 |localhost|127.0.0.1|TCP|ADIOS
+===================================================================
+===================================================================
+STARTING LOG AT Fri Dec  8 16:18:13 2023
+NUMERO DE LINEAS LEIDAS: 10
+===================================================================
+SERVER SENDING at Fri Dec  8 16:18:13 2023 on PORT 39346|localhost|0.0.0.0|TCP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Fri Dec  8 16:18:13 2023|localhost|127.0.0.1|TCP|HOLA
+===================================================================
+SERVER SENDING at Fri Dec  8 16:18:13 2023|localhost|0.0.0.0|TCP|250 ¿Cuántos jugadores hay en un equipo de voleibol?#5
+===================================================================
+RECEIVED at Fri Dec  8 16:18:14 2023|localhost|127.0.0.1|TCP|RESPUESTA no lo se
+===================================================================
+SERVER SENDING at Fri Dec  8 16:18:14 2023|localhost|0.0.0.0|TCP|500 Error de sintaxis#4
+===================================================================
+RECEIVED at Fri Dec  8 16:18:15 2023|localhost|127.0.0.1|TCP|RESPUESTA 67
+===================================================================
+SERVER SENDING at Fri Dec  8 16:18:15 2023|localhost|0.0.0.0|TCP|354 MENOR#3
+===================================================================
+RECEIVED at Fri Dec  8 16:18:16 2023|localhost|127.0.0.1|TCP|RESPUESTA 110
+===================================================================
+SERVER SENDING at Fri Dec  8 16:18:16 2023|localhost|0.0.0.0|TCP|354 MENOR#2
+===================================================================
+RECEIVED at Fri Dec  8 16:18:17 2023|localhost|127.0.0.1|TCP|RESPUESTA 220
+===================================================================
+SERVER SENDING at Fri Dec  8 16:18:17 2023|localhost|0.0.0.0|TCP|354 MENOR#1
+===================================================================
+RECEIVED at Fri Dec  8 16:18:19 2023|localhost|127.0.0.1|TCP|+
+===================================================================
+SERVER SENDING at Fri Dec  8 16:18:19 2023|localhost|0.0.0.0|TCP|345 INCREMENTADO 1 INTENTO
+===================================================================
+RECEIVED at Fri Dec  8 16:18:20 2023|localhost|127.0.0.1|TCP|RESPUESTA 51
+===================================================================
+SERVER SENDING at Fri Dec  8 16:18:20 2023|localhost|0.0.0.0|TCP|354 MENOR#1
+===================================================================
+RECEIVED at Fri Dec  8 16:18:21 2023|localhost|127.0.0.1|TCP|RESPUESTA 110
+===================================================================
+SERVER SENDING at Fri Dec  8 16:18:21 2023|localhost|0.0.0.0|TCP|354 MENOR#0
+===================================================================
+SERVER SENDING at Fri Dec  8 16:18:21 2023|localhost|0.0.0.0|TCP|375 FALLO

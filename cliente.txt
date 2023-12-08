@@ -1,74 +1,166 @@
-Connected to localhost on port 50300 at Fri Dec  8 13:22:16 2023
-S:220 SERVICIO PREPARADO
-C:dd
-S:500 Error de sintaxis
-C:500 Error de sintaxis
-C:HOLA
-S:250 ¿Cuántos minutos dura un partido de baloncesto?#15
-C:250 ¿Cuántos minutos dura un partido de baloncesto?#15
-C:RESPUESTA 50
-S:354 MAYOR#14
-C:354 MAYOR#14
-C:-1
-S:500 Error de sintaxis
-C:500 Error de sintaxis
-C:1
-S:500 Error de sintaxis
-C:500 Error de sintaxis
-C:3
-S:500 Error de sintaxis
-C:500 Error de sintaxis
-C:3
-S:500 Error de sintaxis
-C:500 Error de sintaxis
-C:RESPUESTA 100
-S:354 MAYOR#13
-C:354 MAYOR#13
-C:RESPUESTA 1
-S:354 MAYOR#12
-C:354 MAYOR#12
-C:2
-S:500 Error de sintaxis
-C:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:500 Error de sintaxis
-C:ADIOS
-S:ADIOS
-C:ADIOS
-Connected to localhost on port 55348 at Fri Dec  8 13:24:51 2023
-S:220 SERVICIO PREPARADO
-C:dd
-S:500 Error de sintaxis
-C:HOLA
-S:250 ¿Cuántos jugadores hay en un equipo de baloncesto?#15
-C:RESPUESTA 50
-S:354 MAYOR#14
-C:-1
-S:500 Error de sintaxis
-C:1
-S:500 Error de sintaxis
-C:3
-S:500 Error de sintaxis
-C:3
-S:500 Error de sintaxis
-C:RESPUESTA 100
-S:354 MAYOR#13
-C:RESPUESTA 1
-S:354 MAYOR#12
-C:2
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:2
-S:500 Error de sintaxis
-C:ADIOS
-S:ADIOS
+Connected to localhost on port 53412 at Fri Dec  8 16:02:39 2023
+SERVER SENDING at Fri Dec  8 16:02:39 2023|localhost|127.0.0.1|TCP|220 SERVICIO PREPARADO
+CLIENT SENDING at Fri Dec  8 16:02:39 2023|localhost|127.0.0.1|TCP|HOLA
+SERVER SENDING at Fri Dec  8 16:02:39 2023|localhost|127.0.0.1|TCP|250 ¿Cuántos metros mide una pista de atletismo?#5
+CLIENT SENDING at Fri Dec  8 16:02:39 2023|localhost|127.0.0.1|TCP|dd
+SERVER SENDING at Fri Dec  8 16:02:40 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#4
+CLIENT SENDING at Fri Dec  8 16:02:40 2023|localhost|127.0.0.1|TCP|-1
+SERVER SENDING at Fri Dec  8 16:02:41 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#3
+CLIENT SENDING at Fri Dec  8 16:02:41 2023|localhost|127.0.0.1|TCP|-1
+SERVER SENDING at Fri Dec  8 16:02:42 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#2
+CLIENT SENDING at Fri Dec  8 16:02:42 2023|localhost|127.0.0.1|TCP|-+
+SERVER SENDING at Fri Dec  8 16:02:43 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#1
+CLIENT SENDING at Fri Dec  8 16:02:43 2023|localhost|127.0.0.1|TCP|-+
+SERVER SENDING at Fri Dec  8 16:02:44 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#0
+CLIENT SENDING at Fri Dec  8 16:02:44 2023|localhost|127.0.0.1|TCP|RESPUESTA 1
+SERVER SENDING at Fri Dec  8 16:02:44 2023|localhost|127.0.0.1|TCP|375 FALLO
+Closing down at Fri Dec  8 16:02:47 2023 on port 53412============================================================
+Connected to localhost on port 49086 at Fri Dec  8 16:04:21 2023
+SERVER SENDING at Fri Dec  8 16:04:21 2023|localhost|127.0.0.1|TCP|220 SERVICIO PREPARADO
+CLIENT SENDING at Fri Dec  8 16:04:21 2023|localhost|127.0.0.1|TCP|HOLA
+SERVER SENDING at Fri Dec  8 16:04:21 2023|localhost|127.0.0.1|TCP|250 ¿Cuántos hoyos tiene un campo de golf?#5
+CLIENT SENDING at Fri Dec  8 16:04:21 2023|localhost|127.0.0.1|TCP|dd
+SERVER SENDING at Fri Dec  8 16:04:22 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#4
+CLIENT SENDING at Fri Dec  8 16:04:22 2023|localhost|127.0.0.1|TCP|-1
+SERVER SENDING at Fri Dec  8 16:04:23 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#3
+CLIENT SENDING at Fri Dec  8 16:04:23 2023|localhost|127.0.0.1|TCP|-1
+SERVER SENDING at Fri Dec  8 16:04:24 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#2
+CLIENT SENDING at Fri Dec  8 16:04:24 2023|localhost|127.0.0.1|TCP|-+
+SERVER SENDING at Fri Dec  8 16:04:25 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#1
+CLIENT SENDING at Fri Dec  8 16:04:25 2023|localhost|127.0.0.1|TCP|-+
+SERVER SENDING at Fri Dec  8 16:04:26 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#0
+CLIENT SENDING at Fri Dec  8 16:04:26 2023|localhost|127.0.0.1|TCP|RESPUESTA 1
+SERVER SENDING at Fri Dec  8 16:04:26 2023|localhost|127.0.0.1|TCP|375 FALLO
+Closing down on port 49086 at Fri Dec  8 16:04:29 2023 ============================================================
+Connected to localhost on port 50608 at Fri Dec  8 16:05:09 2023
+SERVER SENDING at Fri Dec  8 16:05:09 2023|localhost|127.0.0.1|TCP|220 SERVICIO PREPARADO
+CLIENT SENDING at Fri Dec  8 16:05:09 2023|localhost|127.0.0.1|TCP|HOLA
+SERVER SENDING at Fri Dec  8 16:05:09 2023|localhost|127.0.0.1|TCP|250 ¿Cuántos jugadores hay en un equipo de baloncesto?#5
+CLIENT SENDING at Fri Dec  8 16:05:09 2023|localhost|127.0.0.1|TCP|dd
+SERVER SENDING at Fri Dec  8 16:05:10 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#4
+CLIENT SENDING at Fri Dec  8 16:05:10 2023|localhost|127.0.0.1|TCP|-1
+SERVER SENDING at Fri Dec  8 16:05:11 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#3
+CLIENT SENDING at Fri Dec  8 16:05:11 2023|localhost|127.0.0.1|TCP|-1
+SERVER SENDING at Fri Dec  8 16:05:12 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#2
+CLIENT SENDING at Fri Dec  8 16:05:12 2023|localhost|127.0.0.1|TCP|-+
+SERVER SENDING at Fri Dec  8 16:05:13 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#1
+CLIENT SENDING at Fri Dec  8 16:05:13 2023|localhost|127.0.0.1|TCP|-+
+SERVER SENDING at Fri Dec  8 16:05:14 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#0
+CLIENT SENDING at Fri Dec  8 16:05:14 2023|localhost|127.0.0.1|TCP|RESPUESTA 1
+SERVER SENDING at Fri Dec  8 16:05:14 2023|localhost|127.0.0.1|TCP|375 FALLO
+Closing down on port 50608 at Fri Dec  8 16:05:17 2023
+============================================================
+Connected to localhost on port 51994 at Fri Dec  8 16:05:45 2023
+SERVER SENDING at Fri Dec  8 16:05:45 2023|localhost|127.0.0.1|TCP|220 SERVICIO PREPARADO
+CLIENT SENDING at Fri Dec  8 16:05:45 2023|localhost|127.0.0.1|TCP|HOLA
+SERVER SENDING at Fri Dec  8 16:05:45 2023|localhost|127.0.0.1|TCP|250 ¿Cuántos jugadores hay en un equipo de baloncesto?#5
+CLIENT SENDING at Fri Dec  8 16:05:45 2023|localhost|127.0.0.1|TCP|dd
+SERVER SENDING at Fri Dec  8 16:05:47 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#4
+CLIENT SENDING at Fri Dec  8 16:05:47 2023|localhost|127.0.0.1|TCP|-1
+SERVER SENDING at Fri Dec  8 16:05:48 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#3
+CLIENT SENDING at Fri Dec  8 16:05:48 2023|localhost|127.0.0.1|TCP|-1
+SERVER SENDING at Fri Dec  8 16:05:49 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#2
+CLIENT SENDING at Fri Dec  8 16:05:49 2023|localhost|127.0.0.1|TCP|-+
+SERVER SENDING at Fri Dec  8 16:05:50 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#1
+CLIENT SENDING at Fri Dec  8 16:05:50 2023|localhost|127.0.0.1|TCP|RESPUESTA 1
+SERVER SENDING at Fri Dec  8 16:05:51 2023|localhost|127.0.0.1|TCP|350 ACIERTO
+CLIENT SENDING at Fri Dec  8 16:05:51 2023|localhost|127.0.0.1|TCP|2
+SERVER SENDING at Fri Dec  8 16:05:51 2023|localhost|127.0.0.1|TCP|250 ¿Cuántos puntos vale un touchdown en fútbol americano?#1
+CLIENT SENDING at Fri Dec  8 16:05:51 2023|localhost|127.0.0.1|TCP|2
+SERVER SENDING at Fri Dec  8 16:05:52 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#0
+CLIENT SENDING at Fri Dec  8 16:05:52 2023|localhost|127.0.0.1|TCP|2
+SERVER SENDING at Fri Dec  8 16:05:52 2023|localhost|127.0.0.1|TCP|375 FALLO
+Closing down on port 51994 at Fri Dec  8 16:05:55 2023
+============================================================
+Connected to localhost on port 43940 at Fri Dec  8 16:07:19 2023
+SERVER SENDING at Fri Dec  8 16:07:19 2023|localhost|127.0.0.1|TCP|220 SERVICIO PREPARADO
+CLIENT SENDING at Fri Dec  8 16:07:19 2023|localhost|127.0.0.1|TCP|HOLA
+SERVER SENDING at Fri Dec  8 16:07:19 2023|localhost|127.0.0.1|TCP|250 ¿Cuántos jugadores hay en un equipo de baloncesto?#5
+CLIENT SENDING at Fri Dec  8 16:07:19 2023|localhost|127.0.0.1|TCP|dd
+SERVER SENDING at Fri Dec  8 16:07:20 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#4
+CLIENT SENDING at Fri Dec  8 16:07:20 2023|localhost|127.0.0.1|TCP|RESPUESTA 1
+SERVER SENDING at Fri Dec  8 16:07:21 2023|localhost|127.0.0.1|TCP|350 ACIERTO
+CLIENT SENDING at Fri Dec  8 16:07:21 2023|localhost|127.0.0.1|TCP|2
+SERVER SENDING at Fri Dec  8 16:07:21 2023|localhost|127.0.0.1|TCP|250 ¿Cuántos puntos vale un touchdown en fútbol americano?#4
+CLIENT SENDING at Fri Dec  8 16:07:21 2023|localhost|127.0.0.1|TCP|2
+SERVER SENDING at Fri Dec  8 16:07:22 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#3
+CLIENT SENDING at Fri Dec  8 16:07:22 2023|localhost|127.0.0.1|TCP|2
+SERVER SENDING at Fri Dec  8 16:07:23 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#2
+CLIENT SENDING at Fri Dec  8 16:07:23 2023|localhost|127.0.0.1|TCP|2
+SERVER SENDING at Fri Dec  8 16:07:24 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#1
+CLIENT SENDING at Fri Dec  8 16:07:24 2023|localhost|127.0.0.1|TCP|ADIOS
+SERVER SENDING at Fri Dec  8 16:07:25 2023|localhost|127.0.0.1|TCP|ADIOS
+Closing down on port 43940 at Fri Dec  8 16:07:28 2023
+============================================================
+Connected to localhost on port 50814 at Fri Dec  8 16:10:11 2023
+SERVER SENDING at Fri Dec  8 16:10:11 2023|localhost|127.0.0.1|TCP|220 SERVICIO PREPARADO
+CLIENT SENDING at Fri Dec  8 16:10:11 2023|localhost|127.0.0.1|TCP|HOLA
+SERVER SENDING at Fri Dec  8 16:10:11 2023|localhost|127.0.0.1|TCP|250 ¿Cuántos rounds hay en una pelea de boxeo?#5
+CLIENT SENDING at Fri Dec  8 16:10:11 2023|localhost|127.0.0.1|TCP|dd
+SERVER SENDING at Fri Dec  8 16:10:12 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#4
+CLIENT SENDING at Fri Dec  8 16:10:12 2023|localhost|127.0.0.1|TCP|RESPUESTA 1
+SERVER SENDING at Fri Dec  8 16:10:13 2023|localhost|127.0.0.1|TCP|350 ACIERTO
+CLIENT SENDING at Fri Dec  8 16:10:13 2023|localhost|127.0.0.1|TCP|2
+SERVER SENDING at Fri Dec  8 16:10:13 2023|localhost|127.0.0.1|TCP|250 ¿Cuántos minutos dura un partido de baloncesto?#4
+CLIENT SENDING at Fri Dec  8 16:10:13 2023|localhost|127.0.0.1|TCP|2
+SERVER SENDING at Fri Dec  8 16:10:14 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#3
+CLIENT SENDING at Fri Dec  8 16:10:14 2023|localhost|127.0.0.1|TCP|2
+SERVER SENDING at Fri Dec  8 16:10:15 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#2
+CLIENT SENDING at Fri Dec  8 16:10:15 2023|localhost|127.0.0.1|TCP|2
+SERVER SENDING at Fri Dec  8 16:10:16 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#1
+CLIENT SENDING at Fri Dec  8 16:10:16 2023|localhost|127.0.0.1|TCP|ADIOS
+SERVER SENDING at Fri Dec  8 16:10:17 2023|localhost|127.0.0.1|TCP|ADIOS
+Closing down on port 50814 at Fri Dec  8 16:10:20 2023
+============================================================
+Connected to localhost on port 56616 at Fri Dec  8 16:16:12 2023
+SERVER SENDING at Fri Dec  8 16:16:12 2023|localhost|127.0.0.1|TCP|220 SERVICIO PREPARADO
+CLIENT SENDING at Fri Dec  8 16:16:12 2023|localhost|127.0.0.1|TCP|HOLA
+SERVER SENDING at Fri Dec  8 16:16:12 2023|localhost|127.0.0.1|TCP|250 ¿Cuántos jugadores hay en un equipo de baloncesto?#5
+CLIENT SENDING at Fri Dec  8 16:16:12 2023|localhost|127.0.0.1|TCP|dd
+SERVER SENDING at Fri Dec  8 16:16:13 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#4
+CLIENT SENDING at Fri Dec  8 16:16:13 2023|localhost|127.0.0.1|TCP|RESPUESTA 1
+SERVER SENDING at Fri Dec  8 16:16:14 2023|localhost|127.0.0.1|TCP|350 ACIERTO
+Closing down on port 56616 at Fri Dec  8 16:16:17 2023
+============================================================
+Connected to localhost on port 52692 at Fri Dec  8 16:16:48 2023
+SERVER SENDING at Fri Dec  8 16:16:48 2023|localhost|127.0.0.1|TCP|220 SERVICIO PREPARADO
+CLIENT SENDING at Fri Dec  8 16:16:48 2023|localhost|127.0.0.1|TCP|HOLA
+SERVER SENDING at Fri Dec  8 16:16:48 2023|localhost|127.0.0.1|TCP|250 ¿Cuántos jugadores hay en un equipo de voleibol?#5
+CLIENT SENDING at Fri Dec  8 16:16:48 2023|localhost|127.0.0.1|TCP|dd
+SERVER SENDING at Fri Dec  8 16:16:49 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#4
+CLIENT SENDING at Fri Dec  8 16:16:49 2023|localhost|127.0.0.1|TCP|RESPUESTA 1
+SERVER SENDING at Fri Dec  8 16:16:50 2023|localhost|127.0.0.1|TCP|350 ACIERTO
+CLIENT SENDING at Fri Dec  8 16:16:50 2023|localhost|127.0.0.1|TCP|2
+SERVER SENDING at Fri Dec  8 16:16:50 2023|localhost|127.0.0.1|TCP|250 ¿Cuántos minutos dura un partido de baloncesto?#4
+CLIENT SENDING at Fri Dec  8 16:16:50 2023|localhost|127.0.0.1|TCP|2
+SERVER SENDING at Fri Dec  8 16:16:51 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#3
+CLIENT SENDING at Fri Dec  8 16:16:51 2023|localhost|127.0.0.1|TCP|2
+SERVER SENDING at Fri Dec  8 16:16:52 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#2
+CLIENT SENDING at Fri Dec  8 16:16:52 2023|localhost|127.0.0.1|TCP|2
+SERVER SENDING at Fri Dec  8 16:16:53 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#1
+CLIENT SENDING at Fri Dec  8 16:16:53 2023|localhost|127.0.0.1|TCP|ADIOS
+SERVER SENDING at Fri Dec  8 16:16:54 2023|localhost|127.0.0.1|TCP|ADIOS
+Closing down on port 52692 at Fri Dec  8 16:16:57 2023
+============================================================
+Connected to localhost on port 39346 at Fri Dec  8 16:18:13 2023
+SERVER SENDING at Fri Dec  8 16:18:13 2023|localhost|127.0.0.1|TCP|220 SERVICIO PREPARADO
+CLIENT SENDING at Fri Dec  8 16:18:13 2023|localhost|127.0.0.1|TCP|HOLA
+SERVER SENDING at Fri Dec  8 16:18:13 2023|localhost|127.0.0.1|TCP|250 ¿Cuántos jugadores hay en un equipo de voleibol?#5
+CLIENT SENDING at Fri Dec  8 16:18:13 2023|localhost|127.0.0.1|TCP|RESPUESTA no lo se
+SERVER SENDING at Fri Dec  8 16:18:14 2023|localhost|127.0.0.1|TCP|500 Error de sintaxis#4
+CLIENT SENDING at Fri Dec  8 16:18:14 2023|localhost|127.0.0.1|TCP|RESPUESTA 67
+SERVER SENDING at Fri Dec  8 16:18:15 2023|localhost|127.0.0.1|TCP|354 MENOR#3
+CLIENT SENDING at Fri Dec  8 16:18:15 2023|localhost|127.0.0.1|TCP|RESPUESTA 110
+SERVER SENDING at Fri Dec  8 16:18:16 2023|localhost|127.0.0.1|TCP|354 MENOR#2
+CLIENT SENDING at Fri Dec  8 16:18:16 2023|localhost|127.0.0.1|TCP|RESPUESTA 220
+SERVER SENDING at Fri Dec  8 16:18:17 2023|localhost|127.0.0.1|TCP|354 MENOR#1
+CLIENT SENDING at Fri Dec  8 16:18:17 2023|localhost|127.0.0.1|TCP|+
+SERVER SENDING at Fri Dec  8 16:18:19 2023|localhost|127.0.0.1|TCP|345 INCREMENTADO 1 INTENTO
+CLIENT SENDING at Fri Dec  8 16:18:19 2023|localhost|127.0.0.1|TCP|RESPUESTA 51
+SERVER SENDING at Fri Dec  8 16:18:20 2023|localhost|127.0.0.1|TCP|354 MENOR#1
+CLIENT SENDING at Fri Dec  8 16:18:20 2023|localhost|127.0.0.1|TCP|RESPUESTA 110
+SERVER SENDING at Fri Dec  8 16:18:21 2023|localhost|127.0.0.1|TCP|354 MENOR#0
+CLIENT SENDING at Fri Dec  8 16:18:21 2023|localhost|127.0.0.1|TCP|RESPUESTA 554
+SERVER SENDING at Fri Dec  8 16:18:21 2023|localhost|127.0.0.1|TCP|375 FALLO
+Closing down on port 39346 at Fri Dec  8 16:18:24 2023
+============================================================
