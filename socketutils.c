@@ -1,6 +1,5 @@
 #include "socketutils.h"
 
-
 char **readArchivoPreguntas(char *nombreArchivo, int *nlines)
 {
 	*nlines = 0;
@@ -86,12 +85,19 @@ int createLog(char *filename)
 
 FILE *openLog(char *filename)
 {
-    FILE *file = fopen(filename, "a");
-    if (file == NULL)
-    {
-        printf("No se pudo abrir el archivo de log\n");
-        fflush(stdout);
-        return 	NULL;
-    }
-    return file;
+	FILE *file = fopen(filename, "a");
+	if (file == NULL)
+	{
+		printf("No se pudo abrir el archivo de log\n");
+		fflush(stdout);
+		return NULL;
+	}
+	return file;
+}
+char *getCurrentTimeStr() {
+    time_t timevar;
+    time(&timevar);
+    char *timeStr = ctime(&timevar);
+    timeStr[strlen(timeStr) - 1] = '\0'; // Eliminar el carácter de nueva línea
+    return timeStr;
 }

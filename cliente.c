@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 }
 void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
 {
-    int s, len, len1; /* connected socket descriptor */
+    int s, len; /* connected socket descriptor */
     struct addrinfo hints, *res;
     long timevar;                   /* contains time returned by time() */
     struct sockaddr_in myaddr_in;   /* for local socket address */
@@ -148,8 +148,14 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
     int intentos = 0; // Agrega un contador para los mensajes
     size_t tam;
     memset(buf, 0, TAM_BUFFER);
-    recv(s, buf, TAM_BUFFER, 0);
-    fprintf(log, "S:%s", buf);
+   
+    if( recv(s, buf, TAM_BUFFER, 0)==-1){
+        perror(program);
+        fprintf(stderr, "%s: Imposible recibir\n", program);
+        intentos++;
+    }
+    fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(servaddr_in.sin_addr), "TCP", buf);
+
     fflush(stdout);
 
     while (fgets(buf, TAM_BUFFER, fp) != NULL)
@@ -167,9 +173,7 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
         strcat(buf, "\r\n");
 
         len = send(s, buf, TAM_BUFFER, 0);
-        fprintf(log, "C:%s", buf);
 
-        
         if (len == -1)
         {
             perror(program);
@@ -177,19 +181,30 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
             intentos++;
         }
 
+        fprintf(log, "CLIENT SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", buf);
+
         // Data receiving from server
         len = recv(s, buf, TAM_BUFFER, 0);
-        fprintf(log, "S:%s", buf);
+
         if (len == -1)
         {
             perror(program);
             fprintf(stderr, "%s: Imposible recibir\n", program);
             intentos++;
         }
+        if(strcmp(buf,ACIERTO) == 0){
+            fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(servaddr_in.sin_addr), "TCP", buf);
+            continue;
+        }
+        fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(servaddr_in.sin_addr), "TCP", buf);
+
+        if (strcmp(buf, "375 FALLO\r\n") == 0)
+        {
+
+            break;
+        }
 
         fflush(stdout);
-
-        intentos++;
     }
 
     fclose(fp);
@@ -198,8 +213,10 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
     /* Print message indicating completion of task. */
     sleep(3);
     time(&timevar);
-    printf("Closing down at %s", (char *)ctime(&timevar));
+    fprintf(log, "Closing down on port %d at %s\n", ntohs(myaddr_in.sin_port), getCurrentTimeStr());
+    fprintf(log, "============================================================\n");
     fflush(stdout);
 
     close(s);
+    fclose(log);
 }

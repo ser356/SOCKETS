@@ -36,9 +36,9 @@ extern int errno;
  *	will loop forever, until killed by a signal.
  *
  */
-void serverTCP(int s, struct sockaddr_in peeraddr_in);
+void serverTCP(int s, struct sockaddr_in peeraddr_in, struct sockaddr_in serveraddr_in);
 void serverUDP(int s, char *buffer, struct sockaddr_in clientaddr_in);
-void errout(char *); /* declare error out routine */
+void errout(char *, FILE *); /* declare error out routine */
 
 int FIN = 0; /* Para el cierre ordenado */
 void finalizar() { FIN = 1; }
@@ -244,7 +244,7 @@ char *argv[];
 						exit(1);
 					case 0:			   /* Child process comes here. */
 						close(ls_TCP); /* Close the listen socket inherited from the daemon. */
-						serverTCP(s_TCP, clientaddr_in);
+						serverTCP(s_TCP, clientaddr_in, myaddr_in);
 						exit(0);
 					default: /* Daemon process comes here. */
 							 /* The daemon needs to remember
@@ -313,7 +313,7 @@ char *argv[];
  *	logging information to stdout.
  *
  */
-void serverTCP(int sock, struct sockaddr_in clientaddr_in)
+void serverTCP(int sock, struct sockaddr_in clientaddr_in, struct sockaddr_in myaddr_in)
 {
 
 	char buf[TAM_BUFFER];	/* This example uses TAM_BUFFER byte messages. */
@@ -364,12 +364,22 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 	 * This will cause a final close of this socket to wait until all of the
 	 * data sent on it has been received by the remote host.
 	 */
+	char *logfile = "peticiones.txt";
+	FILE *log = openLog(logfile);
+	if (log == NULL)
+	{
+		// THE ONLY ERROR MSG THAT COULDNT BE LOGGED
+		fprintf(stderr, "FATAL!: No se pudo abrir el archivo de log!\n");
+		fflush(stdout);
+
+		exit(1);
+	}
 	linger.l_onoff = 1;
 	linger.l_linger = 1;
 	if (setsockopt(sock, SOL_SOCKET, SO_LINGER, &linger,
 				   sizeof(linger)) == -1)
 	{
-		errout(hostname);
+		errout(hostname, log);
 	}
 
 	/* Go into a loop, receiving requests from the remote
@@ -382,21 +392,18 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 	 * how the server will know that no more requests will
 	 * follow, and the loop will be exited.
 	 */
-
+	int tries = 5;
 	int numberOfLines;
 	char **matrizPreguntas = readArchivoPreguntas("archivopreguntas.txt", &numberOfLines);
 	fflush(stdout);
-	char *logfile = "peticiones.txt";
-	FILE *log = openLog(logfile);
-	if (log == NULL)
-	{
-		fprintf(stderr, "FATAL!: No se pudo abrir el archivo de log!\n");
-		fflush(stdout);
 
-		exit(1);
-	}
+	fprintf(log, "===================================================================\n");
+
+	fprintf(log, "STARTING LOG AT %s\n", getCurrentTimeStr());
 
 	fprintf(log, "NUMERO DE LINEAS LEIDAS: %d\n", numberOfLines);
+	fprintf(log, "===================================================================\n");
+
 	char **matrizRespuestas = readArchivoRespuestas("archivorespuestas.txt");
 
 	if (matrizPreguntas == NULL)
@@ -418,8 +425,9 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 		exit(1);
 	}
 	send(sock, "220 SERVICIO PREPARADO\r\n", sizeof("220 SERVICIO PREPARADO\r\n"), 0);
-	fprintf(log, "S:220 SERVICIO PREPARADO\r\n");
-	int intentosJuego = 15;
+
+	fprintf(log, "SERVER SENDING at %s on PORT %d|%s|%s|%s|%s", getCurrentTimeStr(), ntohs(clientaddr_in.sin_port), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", "220 SERVICIO PREPARADO\r\n");
+	fprintf(log, "===================================================================\n");
 	int index;
 	int next = 0;
 	char *lineofFileofQuestions;
@@ -438,7 +446,8 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 		if (strcmp(buf, "HOLA\r\n") == 0)
 		{
 
-			fprintf(log, "C:%s", buf);
+			fprintf(log, "RECEIVED HOLA at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(clientaddr_in.sin_addr), "TCP", buf);
+			fprintf(log, "===================================================================\n");
 		}
 
 		if (strcmp(buf, HOLA) == 0 || next == 1)
@@ -450,14 +459,16 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 			lineofFileofQuestions[strlen(lineofFileofQuestions) - 1] = '\0';
 
 			char response[TAM_BUFFER] = "250 ";
-			sprintf(response, "250 %s#%d\r\n", lineofFileofQuestions, intentosJuego);
+			sprintf(response, "250 %s#%d\r\n", lineofFileofQuestions, tries);
 			len = send(sock, response, TAM_BUFFER, 0);
-			fprintf(log, "S:%s", response);
+
 			if (len == -1)
 			{
 				perror("Error al enviar");
 				exit(1);
 			}
+			fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", response);
+			fprintf(log, "===================================================================\n");
 
 			char *respuesta = getAnswerFromIndex(index, matrizRespuestas);
 			respuesta[strlen(respuesta) - 1] = '\0';
@@ -475,8 +486,11 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 					perror("Error al recibir");
 					exit(1);
 				}
-				fprintf(log, "C:%s", buf);
+				fprintf(log, "RECEIVED at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(clientaddr_in.sin_addr), "TCP", buf);
+				fprintf(log, "===================================================================\n");
+
 				fflush(stdout);
+
 				/*
 				LA RESPUESTA VIENE EN FORMATO "RESPUESTA <NUMERO>\r\n"
 				POR LO QUE SE DEBE SEPARAR EL NUMERO DEL RESTO DEL STRING
@@ -485,78 +499,111 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 				char evaluar[] = "RESPUESTA ";
 				int number;
 				int isvalidresponse = sscanf(buf, "%s %d\r\n", evaluar, &number);
-				if (strcmp(buf, ADIOS) == 0 || (isvalidresponse == 2))
+
+				if (strcmp(buf, ADIOS) == 0 || (isvalidresponse == 2) || strcmp(buf, "+\r\n") == 0)
 				{ // Verificar si el cliente envió "ADIOS"
+					if (strcmp(buf, "+\r\n") == 0)
+					{
+						tries++;
+						sprintf(esMayoroMenor, "345 INCREMENTADO 1 INTENTO\r\n");
+						len = send(sock, esMayoroMenor, TAM_BUFFER, 0);
+						// dont want to interact with the rest of the code
+						fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", esMayoroMenor);
+						fprintf(log, "===================================================================\n");
+						continue;
+					}
 					if (strcmp(buf, "ADIOS\r\n") == 0)
 					{
 						len = send(sock, ADIOS, sizeof(ADIOS), 0);
-						fprintf(log, "S:%s", ADIOS);
 						if (len == -1)
 						{
 							perror("Error al enviar");
 							exit(1);
 						}
+						fprintf(log, "CLOSING at %s on PORT %d |%s|%s|%s|%s", getCurrentTimeStr(), ntohs(clientaddr_in.sin_port), hostname, inet_ntoa(clientaddr_in.sin_addr), "TCP", "ADIOS\r\n");
+						fprintf(log, "===================================================================\n");
 						break;
 					}
 
-					if (atoi(buf) > atoi(respuesta))
+					if (number > atoi(respuesta))
 					{
-						intentosJuego--;
-						sprintf(esMayoroMenor, "354 %s#%d", MENOR, intentosJuego);
+						tries--;
+						sprintf(esMayoroMenor, "354 %s#%d", MENOR, tries);
 						strcat(esMayoroMenor, "\r\n");
 						len = send(sock, esMayoroMenor, TAM_BUFFER, 0);
-						fprintf(log, "S:%s", esMayoroMenor);
 						if (len == -1)
 						{
 							perror("Error al enviar");
 							exit(1);
 						}
+						fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", esMayoroMenor);
+						fprintf(log, "===================================================================\n");
 					}
-					if (atoi(buf) < atoi(respuesta))
+					if (number < atoi(respuesta))
 					{
-						intentosJuego--;
-						sprintf(esMayoroMenor, "354 %s#%d", MAYOR, intentosJuego);
+						tries--;
+						sprintf(esMayoroMenor, "354 %s#%d", MAYOR, tries);
 						strcat(esMayoroMenor, "\r\n");
 						len = send(sock, esMayoroMenor, TAM_BUFFER, 0);
-						fprintf(log, "S:%s", esMayoroMenor);
+						fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", esMayoroMenor);
+						fprintf(log, "===================================================================\n");
 					}
-					if (atoi(buf) == atoi(respuesta))
+					if (number == atoi(respuesta))
 					{
 						len = send(sock, ACIERTO, sizeof(ACIERTO), 0);
-						fprintf(log, "S:%s", ACIERTO);
+
 						if (len == -1)
 						{
 							perror("Error al enviar");
 							exit(1);
 						}
-
+						fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", ACIERTO);
+						fprintf(log, "===================================================================\n");
 						next = 1;
 					}
 				}
 				else
 				{
-					len = send(sock, SYNTAX_ERROR, sizeof(SYNTAX_ERROR), 0);
-					fprintf(log, "S:%s", SYNTAX_ERROR);
+					tries--;
+					sprintf(esMayoroMenor, "%s#%d\r\n", SYNTAX_ERROR, tries);
+					len = send(sock, esMayoroMenor, sizeof(esMayoroMenor), 0);
 					if (len == -1)
 					{
 						perror("Error al enviar");
 						exit(1);
 					}
+
+					fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", esMayoroMenor);
+					fprintf(log, "===================================================================\n");
 					continue;
 				}
 
-			} while (!next);
+			} while (!next && tries > 0);
+
+			if (tries == 0)
+			{
+				len = send(sock, "375 FALLO\r\n", sizeof("375 FALLO\r\n"), 0);
+				if (len == -1)
+				{
+					perror("Error al enviar");
+					exit(1);
+				}
+				fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", "375 FALLO\r\n");
+				break;
+			}
 		}
 		else
 		{
-			fprintf(log, "C:%s", buf);
 			len = send(sock, SYNTAX_ERROR, sizeof(SYNTAX_ERROR), 0);
-			fprintf(log, "S:%s", SYNTAX_ERROR);
 			if (len == -1)
 			{
 				perror("Error al enviar");
 				exit(1);
 			}
+			fprintf(log, "RECEIVED AT %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(clientaddr_in.sin_addr), "TCP", buf);
+			fprintf(log, "\n");
+			fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", SYNTAX_ERROR);
+			fprintf(log, "===================================================================\n");
 			continue;
 		}
 	}
@@ -568,10 +615,11 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 /*
  *	This routine aborts the child process attending the client.
  */
-void errout(char *hostname)
+void errout(char *hostname, FILE *log)
 {
-	fprintf(stderr, "Exiting from %s\n", hostname);
+	fprintf(log, "Exiting from %s\n", hostname);
 	fflush(stdout);
+	fclose(log);
 	exit(1);
 }
 

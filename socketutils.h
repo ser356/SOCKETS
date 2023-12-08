@@ -17,8 +17,8 @@ FORMAT PROTOCOL FOR THE SERVER AND CLIENT ARE ALSO DEFINED HERE
 #define ACIERTO "350 ACIERTO\r\n"
 #define MAYOR "MAYOR"
 #define MENOR "MENOR"
-#define SYNTAX_ERROR "500 Error de sintaxis\r\n"
-
+#define SYNTAX_ERROR "500 Error de sintaxis"
+char *getCurrentTimeStr();
 FILE* openLog(char *filename);
 int createLog(char *filename);
 int esAdios(char *buffer);
@@ -26,6 +26,5 @@ char *getAnswerFromIndex(int index, char **matrizPreguntas);
 char *getRandomQuestion(char **matrizPreguntas, int *index);
 char **readArchivoPreguntas(char *nombreArchivo, int *nlines);
 char **readArchivoRespuestas(char *nombreArchivo);
-
 #endif
 
