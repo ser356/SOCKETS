@@ -426,6 +426,7 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 	{
 
 		recv(sock, buf, TAM_BUFFER, 0);
+		
 		if (esAdios(buf))
 		{
 
@@ -473,11 +474,18 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 				}
 				printf("C:%s", buf);
 				fflush(stdout);
-
-				if (atoi(buf) != 0 || strcmp(buf, ADIOS) == 0)
+				/*
+				LA RESPUESTA VIENE EN FORMATO "RESPUESTA <NUMERO>\r\n" 
+				POR LO QUE SE DEBE SEPARAR EL NUMERO DEL RESTO DEL STRING
+				SINO -> ERROR DE SINTAXIS
+				*/
+				char evaluar[]= "RESPUESTA ";
+				int number;
+				int isvalidresponse = sscanf(buf, "%s %d\r\n",evaluar, &number);
+				if ( strcmp(buf, ADIOS) == 0 || (isvalidresponse == 2))
 				{ // Verificar si el cliente envió "ADIOS"
 					if (strcmp(buf, "ADIOS\r\n") == 0)
-					{
+			 		{
 						len = send(sock, ADIOS, sizeof(ADIOS), 0);
 						if (len == -1)
 						{
