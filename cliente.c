@@ -8,6 +8,7 @@
 #include <netdb.h>
 #include <string.h>
 #include <time.h>
+#include "socketutils.h"
 
 #define PUERTO 17278
 #define TAM_BUFFER 516
@@ -42,6 +43,15 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
     struct sockaddr_in servaddr_in; /* for server socket address */
     socklen_t addrlen;
     int errcode;
+    char *logfile = "cliente.txt";
+    FILE *log;
+    log = openLog(logfile);
+    if (log == NULL)
+    {
+        perror(program);
+        fprintf(stderr, "%s: unable to open file %s\n", program, logfile);
+        exit(1);
+    }
     /* This example uses TAM_BUFFER byte messages. */
     char buf[TAM_BUFFER];
     char *file = malloc(strlen(filename + 1));
@@ -132,21 +142,19 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
      * that does require it.
      */
 
-    printf("Connected to %s on port %u at %s",
-           hostname, ntohs(myaddr_in.sin_port), (char *)ctime(&timevar));
+    fprintf(log, "Connected to %s on port %u at %s", hostname, ntohs(myaddr_in.sin_port), (char *)ctime(&timevar));
     fflush(stdout);
 
     int intentos = 0; // Agrega un contador para los mensajes
     size_t tam;
     memset(buf, 0, TAM_BUFFER);
     recv(s, buf, TAM_BUFFER, 0);
-    printf("%s", buf);
+    fprintf(log, "S:%s", buf);
     fflush(stdout);
 
     while (fgets(buf, TAM_BUFFER, fp) != NULL)
     {
-        
-        
+
         tam = strlen(buf);
         // If the last char is \n, replace it with \0
         if (tam > 0 && buf[tam - 1] == '\n')
@@ -159,15 +167,19 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
         strcat(buf, "\r\n");
 
         len = send(s, buf, TAM_BUFFER, 0);
+        fprintf(log, "C:%s", buf);
+
+        
         if (len == -1)
         {
             perror(program);
             fprintf(stderr, "%s: Imposible enviar\n", program);
             intentos++;
         }
-        
+
         // Data receiving from server
         len = recv(s, buf, TAM_BUFFER, 0);
+        fprintf(log, "S:%s", buf);
         if (len == -1)
         {
             perror(program);
@@ -175,15 +187,10 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
             intentos++;
         }
 
-        
-       
-        printf("S:%s", buf);
         fflush(stdout);
 
         intentos++;
     }
-
-   
 
     fclose(fp);
     free(file);

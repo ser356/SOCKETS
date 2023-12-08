@@ -5,31 +5,25 @@
  *	sockets TCP and UDP as an IPC mechanism.
  *
  */
+#include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/errno.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <signal.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <netdb.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
-
+#include "socketutils.h"
 #define MAX_requestattempts 5
 
 #define PUERTO 17278
 #define ADDRNOTFOUND 0xffffffff /* return address for unfound host */
 #define TAM_BUFFER 516
 #define MAXHOST 128
-#define HOLA "HOLA\r\n"
-#define ADIOS "ADIOS\r\n"
-#define ACIERTO "350 ACIERTO\r\n"
-#define MAYOR "MAYOR"
-#define MENOR "MENOR"
-#define SYNTAX_ERROR "500 Error de sintaxis\r\n"
 
 extern int errno;
 
@@ -42,12 +36,6 @@ extern int errno;
  *	will loop forever, until killed by a signal.
  *
  */
-int createLog(char *filename);
-int esAdios(char *buffer);
-char *getAnswerFromIndex(int index, char **matrizPreguntas);
-char *getRandomQuestion(char **matrizPreguntas, int *index);
-char **readArchivoPreguntas(char *nombreArchivo, int *nlines);
-char **readArchivoRespuestas(char *nombreArchivo);
 void serverTCP(int s, struct sockaddr_in peeraddr_in);
 void serverUDP(int s, char *buffer, struct sockaddr_in clientaddr_in);
 void errout(char *); /* declare error out routine */
@@ -59,7 +47,7 @@ int main(argc, argv)
 int argc;
 char *argv[];
 {
-	// seed
+	// seed, must only be called once, at the beginning of the program
 	srand(time(NULL));
 
 	int s_TCP, s_UDP; /* connected socket descriptor */
@@ -244,6 +232,9 @@ char *argv[];
 					 * peer, and a new socket descriptor, s,
 					 * for that connection.
 					 */
+
+					// starting log for all incoming connections
+					createLog("log.log");
 					s_TCP = accept(ls_TCP, (struct sockaddr *)&clientaddr_in, &addrlen);
 					if (s_TCP == -1)
 						exit(1);
@@ -391,18 +382,28 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 	 * how the server will know that no more requests will
 	 * follow, and the loop will be exited.
 	 */
+
 	int numberOfLines;
 	char **matrizPreguntas = readArchivoPreguntas("archivopreguntas.txt", &numberOfLines);
 	fflush(stdout);
-	char *logfile = "log.log";
-	printf("Numero de lineas: %d\n", numberOfLines);
+	char *logfile = "peticiones.txt";
+	FILE *log = openLog(logfile);
+	if (log == NULL)
+	{
+		fprintf(stderr, "FATAL!: No se pudo abrir el archivo de log!\n");
+		fflush(stdout);
+
+		exit(1);
+	}
+
+	fprintf(log, "NUMERO DE LINEAS LEIDAS: %d\n", numberOfLines);
 	char **matrizRespuestas = readArchivoRespuestas("archivorespuestas.txt");
 
 	if (matrizPreguntas == NULL)
 	{
 		fflush(stdout);
 		fflush(stdout);
-		printf("FATAL!: No se pudo leer el archivo de preguntas!\n");
+		fprintf(log, "FATAL!: No se pudo leer el archivo de preguntas!\n");
 		fflush(stdout);
 
 		exit(1);
@@ -411,12 +412,13 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 	{
 		fflush(stdout);
 		fflush(stdout);
-		printf("FATAL!: No se pudo leer el archivo de respuestas!\n");
+		fprintf(log, "FATAL!: No se pudo leer el archivo de respuestas!\n");
 		fflush(stdout);
 
 		exit(1);
 	}
 	send(sock, "220 SERVICIO PREPARADO\r\n", sizeof("220 SERVICIO PREPARADO\r\n"), 0);
+	fprintf(log, "S:220 SERVICIO PREPARADO\r\n");
 	int intentosJuego = 15;
 	int index;
 	int next = 0;
@@ -426,7 +428,7 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 	{
 
 		recv(sock, buf, TAM_BUFFER, 0);
-		
+
 		if (esAdios(buf))
 		{
 
@@ -436,7 +438,7 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 		if (strcmp(buf, "HOLA\r\n") == 0)
 		{
 
-			printf("C:%s", buf);
+			fprintf(log, "C:%s", buf);
 		}
 
 		if (strcmp(buf, HOLA) == 0 || next == 1)
@@ -450,6 +452,7 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 			char response[TAM_BUFFER] = "250 ";
 			sprintf(response, "250 %s#%d\r\n", lineofFileofQuestions, intentosJuego);
 			len = send(sock, response, TAM_BUFFER, 0);
+			fprintf(log, "S:%s", response);
 			if (len == -1)
 			{
 				perror("Error al enviar");
@@ -472,21 +475,22 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 					perror("Error al recibir");
 					exit(1);
 				}
-				printf("C:%s", buf);
+				fprintf(log, "C:%s", buf);
 				fflush(stdout);
 				/*
-				LA RESPUESTA VIENE EN FORMATO "RESPUESTA <NUMERO>\r\n" 
+				LA RESPUESTA VIENE EN FORMATO "RESPUESTA <NUMERO>\r\n"
 				POR LO QUE SE DEBE SEPARAR EL NUMERO DEL RESTO DEL STRING
 				SINO -> ERROR DE SINTAXIS
 				*/
-				char evaluar[]= "RESPUESTA ";
+				char evaluar[] = "RESPUESTA ";
 				int number;
-				int isvalidresponse = sscanf(buf, "%s %d\r\n",evaluar, &number);
-				if ( strcmp(buf, ADIOS) == 0 || (isvalidresponse == 2))
+				int isvalidresponse = sscanf(buf, "%s %d\r\n", evaluar, &number);
+				if (strcmp(buf, ADIOS) == 0 || (isvalidresponse == 2))
 				{ // Verificar si el cliente envió "ADIOS"
 					if (strcmp(buf, "ADIOS\r\n") == 0)
-			 		{
+					{
 						len = send(sock, ADIOS, sizeof(ADIOS), 0);
+						fprintf(log, "S:%s", ADIOS);
 						if (len == -1)
 						{
 							perror("Error al enviar");
@@ -501,6 +505,7 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 						sprintf(esMayoroMenor, "354 %s#%d", MENOR, intentosJuego);
 						strcat(esMayoroMenor, "\r\n");
 						len = send(sock, esMayoroMenor, TAM_BUFFER, 0);
+						fprintf(log, "S:%s", esMayoroMenor);
 						if (len == -1)
 						{
 							perror("Error al enviar");
@@ -513,10 +518,12 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 						sprintf(esMayoroMenor, "354 %s#%d", MAYOR, intentosJuego);
 						strcat(esMayoroMenor, "\r\n");
 						len = send(sock, esMayoroMenor, TAM_BUFFER, 0);
+						fprintf(log, "S:%s", esMayoroMenor);
 					}
 					if (atoi(buf) == atoi(respuesta))
 					{
 						len = send(sock, ACIERTO, sizeof(ACIERTO), 0);
+						fprintf(log, "S:%s", ACIERTO);
 						if (len == -1)
 						{
 							perror("Error al enviar");
@@ -529,6 +536,7 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 				else
 				{
 					len = send(sock, SYNTAX_ERROR, sizeof(SYNTAX_ERROR), 0);
+					fprintf(log, "S:%s", SYNTAX_ERROR);
 					if (len == -1)
 					{
 						perror("Error al enviar");
@@ -541,8 +549,9 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 		}
 		else
 		{
-			printf("C:%s", buf);
+			fprintf(log, "C:%s", buf);
 			len = send(sock, SYNTAX_ERROR, sizeof(SYNTAX_ERROR), 0);
+			fprintf(log, "S:%s", SYNTAX_ERROR);
 			if (len == -1)
 			{
 				perror("Error al enviar");
@@ -553,6 +562,7 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
 	}
 
 	/* Log a finishing message. */
+	fclose(log);
 }
 
 /*
@@ -560,94 +570,11 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in)
  */
 void errout(char *hostname)
 {
-	printf("Connection with %s aborted on error\n", hostname);
+	fprintf(stderr, "Exiting from %s\n", hostname);
 	fflush(stdout);
 	exit(1);
 }
 
 void serverUDP(int s, char *buffer, struct sockaddr_in clientaddr_in)
 {
-}
-
-char **readArchivoPreguntas(char *nombreArchivo, int *nlines)
-{
-	*nlines = 0;
-	FILE *file = fopen(nombreArchivo, "r");
-	if (file == NULL)
-	{
-		printf("No se pudo abrir el archivo\n");
-		fflush(stdout);
-
-		return NULL;
-	}
-
-	char **matrizPreguntas = malloc(10 * sizeof(char *));
-	for (int j = 0; j < 10; j++)
-		matrizPreguntas[j] = malloc(250 * sizeof(char));
-
-	int i = 0;
-	while (fgets(matrizPreguntas[i], 250, file))
-	{
-		i++;
-		*nlines = *nlines + 1;
-	}
-	fclose(file);
-	return matrizPreguntas;
-}
-
-char **readArchivoRespuestas(char *nombreArchivo)
-{
-	FILE *file = fopen(nombreArchivo, "r");
-	if (file == NULL)
-	{
-		printf("No se pudo abrir el archivo\n");
-		fflush(stdout);
-
-		return NULL;
-	}
-
-	char **matrizRespuestas = malloc(10 * sizeof(char *));
-	for (int j = 0; j < 10; j++)
-		matrizRespuestas[j] = malloc(250 * sizeof(char));
-
-	int i = 0;
-	while (fgets(matrizRespuestas[i], 250, file))
-	{
-		i++;
-	}
-	fclose(file);
-	return matrizRespuestas;
-}
-char *getRandomQuestion(char **matrizPreguntas, int *index)
-{
-
-	int random = rand() % 10;
-	*index = random;
-	return matrizPreguntas[random];
-}
-char *getAnswerFromIndex(int index, char **matrizPreguntas)
-{
-	return matrizPreguntas[index];
-}
-
-int esAdios(char *buffer)
-{
-	return strcmp(buffer, ADIOS) == 0 ? 1 : 0;
-}
-int createLog(char *filename)
-{
-	FILE *file = fopen(filename, "w");
-	// check if exists, if not, create, if exists, append
-	if (file == NULL)
-	{
-		printf("No se pudo crear el archivo de log\n");
-		fflush(stdout);
-
-		return 1;
-	}
-	else
-	{
-		fclose(file);
-		return 0;
-	}
 }

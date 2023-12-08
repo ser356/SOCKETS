@@ -1,0 +1,74 @@
+Connected to localhost on port 50300 at Fri Dec  8 13:22:16 2023
+S:220 SERVICIO PREPARADO
+C:dd
+S:500 Error de sintaxis
+C:500 Error de sintaxis
+C:HOLA
+S:250 ¿Cuántos minutos dura un partido de baloncesto?#15
+C:250 ¿Cuántos minutos dura un partido de baloncesto?#15
+C:RESPUESTA 50
+S:354 MAYOR#14
+C:354 MAYOR#14
+C:-1
+S:500 Error de sintaxis
+C:500 Error de sintaxis
+C:1
+S:500 Error de sintaxis
+C:500 Error de sintaxis
+C:3
+S:500 Error de sintaxis
+C:500 Error de sintaxis
+C:3
+S:500 Error de sintaxis
+C:500 Error de sintaxis
+C:RESPUESTA 100
+S:354 MAYOR#13
+C:354 MAYOR#13
+C:RESPUESTA 1
+S:354 MAYOR#12
+C:354 MAYOR#12
+C:2
+S:500 Error de sintaxis
+C:500 Error de sintaxis
+C:2
+S:500 Error de sintaxis
+C:500 Error de sintaxis
+C:2
+S:500 Error de sintaxis
+C:500 Error de sintaxis
+C:2
+S:500 Error de sintaxis
+C:500 Error de sintaxis
+C:ADIOS
+S:ADIOS
+C:ADIOS
+Connected to localhost on port 55348 at Fri Dec  8 13:24:51 2023
+S:220 SERVICIO PREPARADO
+C:dd
+S:500 Error de sintaxis
+C:HOLA
+S:250 ¿Cuántos jugadores hay en un equipo de baloncesto?#15
+C:RESPUESTA 50
+S:354 MAYOR#14
+C:-1
+S:500 Error de sintaxis
+C:1
+S:500 Error de sintaxis
+C:3
+S:500 Error de sintaxis
+C:3
+S:500 Error de sintaxis
+C:RESPUESTA 100
+S:354 MAYOR#13
+C:RESPUESTA 1
+S:354 MAYOR#12
+C:2
+S:500 Error de sintaxis
+C:2
+S:500 Error de sintaxis
+C:2
+S:500 Error de sintaxis
+C:2
+S:500 Error de sintaxis
+C:ADIOS
+S:ADIOS
