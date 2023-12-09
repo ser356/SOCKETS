@@ -711,7 +711,7 @@ void serverUDP(int socketUDP, struct sockaddr_in clientaddr_in, struct sockaddr_
 
 	sendto(socketUDP, "220 SERVICIO PREPARADO\r\n", sizeof("220 SERVICIO PREPARADO\r\n"), 0, (struct sockaddr *)&clientaddr_in, addrlen);
 
-	fprintf(log, "SERVER SENDING at %s on PORT %d|%s|%s|%s|%s", getCurrentTimeStr(), ntohs(clientaddr_in.sin_port), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", "220 SERVICIO PREPARADO\r\n");
+	fprintf(log, "SERVER SENDING at %s on PORT %d|%s|%s|%s|%s", getCurrentTimeStr(), ntohs(clientaddr_in.sin_port), hostname, inet_ntoa(myaddr_in.sin_addr), "UDP", "220 SERVICIO PREPARADO\r\n");
 	fflush(log);
 	fprintf(log, "===================================================================\n");
 	fflush(log);
@@ -721,7 +721,7 @@ void serverUDP(int socketUDP, struct sockaddr_in clientaddr_in, struct sockaddr_
 	while (1)
 	{
 
-		recibeUDPMejorado(socketUDP, buf, TAM_BUFFER, 0, (struct sockaddr *)&clientaddr_in, &addrlen);
+		recvfrom(socketUDP, buf, TAM_BUFFER, 0, (struct sockaddr *)&clientaddr_in, &addrlen);
 
 		if (esAdios(buf))
 		{
@@ -769,7 +769,7 @@ void serverUDP(int socketUDP, struct sockaddr_in clientaddr_in, struct sockaddr_
 			{
 				// Recibir respuesta del cliente
 				sleep(1);
-				len = recibeUDPMejorado(socketUDP, buf, 0, TAM_BUFFER, (struct sockaddr *)&clientaddr_in, &addrlen);
+				len = recvfrom(socketUDP, buf, TAM_BUFFER, 0, (struct sockaddr *)&clientaddr_in, &addrlen);
 
 				if (len == -1)
 				{

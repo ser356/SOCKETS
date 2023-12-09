@@ -25,18 +25,18 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Uso: %s <host> <protocolo> <archivo>\n", argv[0]);
         exit(1);
     }
-    if (strcmp(argv[2], "tcp") != 0 && strcmp(argv[2], "udp") != 0)
+    if (strcasecmp(argv[2], "tcp") != 0 && strcasecmp(argv[2], "udp") != 0)
 
     {
         fprintf(stderr, "Protocolo %s no soportado\n", argv[2]);
         fprintf(stderr, "Uso: %s <host> <protocolo> <archivo>\n", argv[0]);
         exit(1);
     }
-    else if (strcmp(argv[2], "tcp") == 0)
+    else if (strcasecmp(argv[2], "tcp") == 0)
     {
         clienteTCP(argv[0], argv[1], argv[2], argv[3]);
     }
-    else if (strcmp(argv[2], "udp") == 0)
+    else if (strcasecmp(argv[2], "udp") == 0)
     {
         clienteUDP(argv[0], argv[1], argv[2], argv[3]);
     }
