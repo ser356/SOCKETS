@@ -26,5 +26,6 @@ char *getAnswerFromIndex(int index, char **matrizPreguntas);
 char *getRandomQuestion(char **matrizPreguntas, int *index);
 char **readArchivoPreguntas(char *nombreArchivo, int *nlines);
 char **readArchivoRespuestas(char *nombreArchivo);
+void handler();
 #endif
 

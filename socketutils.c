@@ -1,5 +1,13 @@
 #include "socketutils.h"
-
+/*
+ *			H A N D L E R
+ *
+ *	This routine is the signal handler for the alarm signal.
+ */
+void handler()
+{
+ printf("Alarma recibida \n");
+}
 char **readArchivoPreguntas(char *nombreArchivo, int *nlines)
 {
 	*nlines = 0;

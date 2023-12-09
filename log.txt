@@ -1,8 +1,0 @@
-Continuing.
-[Detaching after fork from child process 56491]
-
-Program received signal SIGINT, Interrupt.
-0x00007f420d0c278d in __GI___select (nfds=5, readfds=0x7ffc5a546440, writefds=0x0, exceptfds=0x0, timeout=0x0) at ../sysdeps/unix/sysv/linux/select.c:69
-69	in ../sysdeps/unix/sysv/linux/select.c
-Detaching from program: /home/ser356/SOCKETS/servidor, process 55937
-[Inferior 1 (process 55937) detached]
