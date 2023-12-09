@@ -1,75 +1,40 @@
-/*
- *          		S E R V I D O R
- *
- *	This is an example program that demonstrates the use of
- *	sockets TCP and UDP as an IPC mechanism.
- *
- */
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/errno.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <signal.h>
-#include <stdlib.h>
-#include <netdb.h>
-#include <string.h>
-#include <time.h>
-#include <unistd.h>
 #include "socketutils.h"
-#define MAX_requestattempts 5
-
-#define PUERTO 17278
-#define ADDRNOTFOUND 0xffffffff /* return address for unfound host */
-#define TAM_BUFFER 516
-#define MAXHOST 128
-
-extern int errno;
-
-/*
- *			M A I N
- *
- *	This routine starts the server.  It forks, leaving the child
- *	to do all the work, so it does not have to be run in the
- *	background.  It sets up the sockets.  It
- *	will loop forever, until killed by a signal.
- *
- */
-void serverTCP(int s, struct sockaddr_in peeraddr_in, struct sockaddr_in serveraddr_in);
-void serverUDP(int socketUDP, char *buf, struct sockaddr_in clientaddr_in, struct sockaddr_in myaddr_in);
-void errout(char *, FILE *); /* declare error out routine */
-
+#define true 1
+#define false 0
 int FIN = 0; /* Para el cierre ordenado */
 void finalizar() { FIN = 1; }
-
-int main(argc, argv)
-int argc;
-char *argv[];
+int main(int argc, char **argv)
 {
-	// seed, must only be called once, at the beginning of the program
-	srand(time(NULL));
 
-	int s_TCP, s_UDP; /* connected socket descriptor */
-	int ls_TCP;		  /* listen socket descriptor */
+	int s_TCP, s_UDP;	/* connected socket descriptor */
+	int ls_TCP, ls_UDP; /* listening socket descriptor */
 
-	int cc; /* contains the number of bytes read */
+	int br; /* contains the number of bytes read */
 
-	struct sigaction sa;
-	sa.sa_handler = SIG_IGN;
+	struct sigaction sa = {.sa_handler = SIG_IGN}; /* used to ignore SIGCHLD */
 
 	struct sockaddr_in myaddr_in;	  /* for local socket address */
 	struct sockaddr_in clientaddr_in; /* for peer socket address */
 	socklen_t addrlen;
 
 	fd_set readmask;
-	int numfds, s_mayor;
+	int numfds, s_bigger;
 
 	char buffer[TAM_BUFFER]; /* buffer for packets to be read into */
 
 	struct sigaction vec;
 
-	/* Create the listen socket. */
+	/* Register SIGALARM */
+	vec.sa_handler = (void *)handler;
+	vec.sa_flags = 0;
+	if (sigaction(SIGALRM, &vec, (struct sigaction *)0) == -1)
+	{
+		perror(" sigaction(SIGALRM)");
+		fprintf(stderr, "%s: unable to register the SIGALRM signal\n", argv[0]);
+		exit(1);
+	}
+
+	/* Create the listen TCP socket. */
 	ls_TCP = socket(AF_INET, SOCK_STREAM, 0);
 	if (ls_TCP == -1)
 	{
@@ -77,7 +42,8 @@ char *argv[];
 		fprintf(stderr, "%s: unable to create socket TCP\n", argv[0]);
 		exit(1);
 	}
-	/* clear out address structures */
+
+	/* Clear out address structures */
 	memset((char *)&myaddr_in, 0, sizeof(struct sockaddr_in));
 	memset((char *)&clientaddr_in, 0, sizeof(struct sockaddr_in));
 
@@ -105,6 +71,7 @@ char *argv[];
 		fprintf(stderr, "%s: unable to bind address TCP\n", argv[0]);
 		exit(1);
 	}
+
 	/* Initiate the listen on the socket so remote users
 	 * can connect.  The listen backlog is set to 5, which
 	 * is the largest currently supported.
@@ -117,20 +84,18 @@ char *argv[];
 	}
 
 	/* Create the socket UDP. */
-	s_UDP = socket(AF_INET, SOCK_DGRAM, 0);
-	if (s_UDP == -1)
+	ls_UDP = socket(AF_INET, SOCK_DGRAM, 0);
+	if (ls_UDP == -1)
 	{
 		perror(argv[0]);
 		printf("%s: unable to create socket UDP\n", argv[0]);
-		fflush(stdout);
-
 		exit(1);
 	}
+
 	/* Bind the server's address to the socket. */
-	if (bind(s_UDP, (struct sockaddr *)&myaddr_in, sizeof(struct sockaddr_in)) == -1)
+	if (bind(ls_UDP, (struct sockaddr *)&myaddr_in, sizeof(struct sockaddr_in)) == -1)
 	{
 		perror(argv[0]);
-		fflush(stdout);
 		printf("%s: unable to bind address UDP\n", argv[0]);
 		exit(1);
 	}
@@ -181,7 +146,7 @@ char *argv[];
 			exit(1);
 		}
 
-		/* Registrar SIGTERM para la finalizacion ordenada del programa servidor */
+		/* Register SIGTERM to create an orderly completion  */
 		vec.sa_handler = (void *)finalizar;
 		vec.sa_flags = 0;
 		if (sigaction(SIGTERM, &vec, (struct sigaction *)0) == -1)
@@ -193,64 +158,64 @@ char *argv[];
 
 		while (!FIN)
 		{
-			/* Meter en el conjunto de sockets los sockets UDP y TCP */
+			/* Add both sockets to the mask */
 			FD_ZERO(&readmask);
 			FD_SET(ls_TCP, &readmask);
-			FD_SET(s_UDP, &readmask);
-			/*
-			Seleccionar el descriptor del socket que ha cambiado. Deja una marca en
-			el conjunto de sockets (readmask)
-			*/
-			if (ls_TCP > s_UDP)
-				s_mayor = ls_TCP;
-			else
-				s_mayor = s_UDP;
+			FD_SET(ls_UDP, &readmask);
 
-			if ((numfds = select(s_mayor + 1, &readmask, (fd_set *)0, (fd_set *)0, NULL)) < 0)
+			/* Select the socket descriptor that has changed. It leaves a
+			   mark in the mask. */
+			if (ls_TCP > ls_UDP)
+				s_bigger = ls_TCP;
+			else
+				s_bigger = ls_UDP;
+
+			if ((numfds = select(s_bigger + 1, &readmask, (fd_set *)0, (fd_set *)0, NULL)) < 0)
 			{
 				if (errno == EINTR)
 				{
-					FIN = 1;
+					FIN = true;
 					close(ls_TCP);
-					close(s_UDP);
-					perror("\nFinalizando el servidor. Se�al recibida en elect\n ");
+					close(ls_UDP);
+					perror("\nFinalizando el servidor. Senial recibida en select\n");
 				}
 			}
 			else
 			{
-
-				/* Comprobamos si el socket seleccionado es el socket TCP */
+				/* Check if the selected socket is TCP */
 				if (FD_ISSET(ls_TCP, &readmask))
 				{
 					/* Note that addrlen is passed as a pointer
 					 * so that the accept call can return the
 					 * size of the returned address.
 					 */
+
 					/* This call will block until a new
 					 * connection arrives.  Then, it will
 					 * return the address of the connecting
 					 * peer, and a new socket descriptor, s,
 					 * for that connection.
 					 */
-
-					// starting log for all incoming connections
-					createLog("log.log");
-					// el socket dedicado para cada cliente se crea en el momento de la conexion
-					// mediante el accept connection
 					s_TCP = accept(ls_TCP, (struct sockaddr *)&clientaddr_in, &addrlen);
 					if (s_TCP == -1)
 						exit(1);
+
 					switch (fork())
 					{
 					case -1: /* Can't fork, just exit. */
 						exit(1);
-					case 0:			   /* Child process comes here. */
-						close(ls_TCP); /* Close the listen socket inherited from the daemon. */
+
+					case 0: /* Child process comes here. */
+						/* Close the listen socket inherited from the daemon. */
+						close(ls_TCP);
+
+						// Starts up the server
 						serverTCP(s_TCP, clientaddr_in, myaddr_in);
 						exit(0);
+
 					default: /* Daemon process comes here. */
 							 /* The daemon needs to remember
-							  * to close the new accept socket
+							  * to close the new abrept socket
 							  * after forking the child.  This
 							  * prevents the daemon from running
 							  * out of file descriptor space.  It
@@ -261,400 +226,102 @@ char *argv[];
 							  */
 						close(s_TCP);
 					}
-				} /* De TCP*/
-				/* Comprobamos si el socket seleccionado es el socket UDP */
-				if (FD_ISSET(s_UDP, &readmask))
+
+				} /* End TCP*/
+
+				/* Check if the selected socket is UDP */
+				if (FD_ISSET(ls_UDP, &readmask))
 				{
 					/* This call will block until a new
-					 * request arrives.  Then, it will
-					 * return the address of the client,
-					 * and a buffer containing its request.
-					 * BUFFERSIZE - 1 bytes are read so that
-					 * room is left at the end of the buffer
-					 * for a null character.
+					 * request arrives.  Then, it will create
+					 * a false "TCP" connection and working the same
+					 * as TCP works creating a new socket for that
+					 * false connection.
 					 */
-					cc = recvfrom(s_UDP, buffer, TAM_BUFFER - 1, 0,
-								  (struct sockaddr *)&clientaddr_in, &addrlen);
-					if (cc == -1)
+					br = recvfrom(ls_UDP, buffer, 1, 0, (struct sockaddr *)&clientaddr_in, &addrlen);
+					if (br == -1)
 					{
 						perror(argv[0]);
-
-						printf("%s: recvfrom error\n", argv[0]);
-						fflush(stdout);
-
+						printf("%s: recvfrom error (failed false connection UDP)\n", argv[0]);
 						exit(1);
 					}
-					/* Make sure the message received is
-					 * null terminated.
+
+					/* When a new client sends a UDP datagram, his information is stored
+					 * in "clientaddr_in", so we can create a false connection by sending messages
+					 * manually with this information
 					 */
-					buffer[cc] = '\0';
-					// create new socket after this fork
-					int socketUDP = socket(AF_INET, SOCK_DGRAM, 0);
-					// 
-					if (socketUDP == -1)
+					s_UDP = socket(AF_INET, SOCK_DGRAM, 0);
+					if (s_UDP == -1)
 					{
 						perror(argv[0]);
-						printf("%s: unable to create socket UDP\n", argv[0]);
-						fflush(stdout);
-
+						printf("%s: unable to create new socket UDP for new client\n", argv[0]);
 						exit(1);
 					}
-					// configure the socket to be able to receive from any address
-					struct sockaddr_in myaddr_in;
+
+					/* Clear and set up address structure for new socket.
+					 * Port 0 is specified to get any of the avaible ones, as well as the IP address.
+					 */
+					memset((char *)&myaddr_in, 0, sizeof(struct sockaddr_in));
 					myaddr_in.sin_family = AF_INET;
 					myaddr_in.sin_addr.s_addr = INADDR_ANY;
 					myaddr_in.sin_port = htons(0);
-					if (bind(socketUDP, (struct sockaddr *)&myaddr_in, sizeof(struct sockaddr_in)) == -1)
+
+					/* Bind the server's address to the new socket for the client. */
+					if (bind(s_UDP, (struct sockaddr *)&myaddr_in, sizeof(struct sockaddr_in)) == -1)
 					{
 						perror(argv[0]);
-						fflush(stdout);
-						printf("%s: unable to bind address UDP\n", argv[0]);
+						printf("%s: unable to bind address new socket UDP for new client\n", argv[0]);
 						exit(1);
 					}
-					
 
-					serverUDP(socketUDP, buffer, clientaddr_in, myaddr_in);
-					close(socketUDP);
+					/* As well as its done in TCP, a new thread is created for that false connection */
+					switch (fork())
+					{
+					case -1:
+						exit(1);
 
-				}
+					case 0: /* Child process comes here. */
+							/* Child doesnt need the listening socket */
+						close(ls_UDP);
+
+						/* Sends a message to the client for him to know the new port for
+						 * the false connection
+						 */
+						if (sendto(s_UDP, " ", 1, 0, (struct sockaddr *)&clientaddr_in, addrlen) == -1)
+						{
+							perror(argv[0]);
+							fprintf(stderr, "%s: unable to send request to \"connect\" \n", argv[0]);
+							exit(1);
+						}
+
+						// Starts up the server
+						serverUDP(s_UDP, clientaddr_in, myaddr_in);
+						exit(0);
+
+					default:
+						close(s_UDP);
+					}
+
+				} /* End UDP*/
 			}
-		} /* Fin del bucle infinito de atenci�n a clientes */
-		/* Cerramos los sockets UDP y TCP */
 
-		close(s_TCP);
-		close(s_UDP);
-		fflush(stdout);
-		fflush(stdout);
+		} /* End new clients loop */
+
+		/* Close sockets before stopping the server */
+		close(ls_TCP);
+		close(ls_UDP);
+
 		printf("\nFin de programa servidor!\n");
-		fflush(stdout);
 
 	default: /* Parent process comes here. */
 		exit(0);
 	}
-}
 
-/*
- *				S E R V E R T C P
- *
- *	This is the actual server routine that the daemon forks to
- *	handle each individual connection.  Its purpose is to receive
- *	the request packets from the remote client, process them,
- *	and return the results to the client.  It will also write some
- *	logging information to stdout.
- *
- */
-void serverTCP(int sock, struct sockaddr_in clientaddr_in, struct sockaddr_in myaddr_in)
+} // End switch
+
+void serverUDP(int socketUDP, struct sockaddr_in clientaddr_in, struct sockaddr_in myaddr_in)
 {
 
-	char buf[TAM_BUFFER];	/* This example uses TAM_BUFFER byte messages. */
-	char hostname[MAXHOST]; /* remote host's name string */
-
-	int len, status;
-	// struct hostent *hp; /* pointer to host info for remote host */
-	long timevar; /* contains time returned by time() */
-
-	struct linger linger; /* allow a lingering, graceful close; */
-						  /* used when setting SO_LINGER */
-	/* Look up the host information for the remote host
-	 * that we have connected with.  Its internet address
-	 * was returned by the accept call, in the main
-	 * daemon loop above.
-	 */
-
-	status = getnameinfo((struct sockaddr *)&clientaddr_in, sizeof(clientaddr_in),
-						 hostname, MAXHOST, NULL, 0, 0);
-	if (status)
-	{
-		/* The information is unavailable for the remote
-		 * host.  Just format its internet address to be
-		 * printed out in the logging information.  The
-		 * address will be shown in "internet dot format".
-		 */
-		/* inet_ntop para interoperatividad con IPv6 */
-		if (inet_ntop(AF_INET, &(clientaddr_in.sin_addr), hostname, MAXHOST) == NULL)
-			perror(" inet_ntop \n");
-	}
-	/* Log a startup message. */
-	time(&timevar);
-	/* The port number must be converted first to host byte
-	 * order before printing.  On most hosts, this is not
-	 * necessary, but the ntohs() call is included here so
-	 * that this program could easily be ported to a host
-	 * that does require it.
-	 */
-	/*
-		fflush(stdout);
-	fflush(stdout);
-("Startup from %s port %u at %s",
-		   hostname, ntohs(clientaddr_in.sin_port), (char *)ctime(&timevar));
-
-	*/
-
-	/* Set the socket for a lingering, graceful close.
-	 * This will cause a final close of this socket to wait until all of the
-	 * data sent on it has been received by the remote host.
-	 */
-	char *logfile = "peticiones.txt";
-	FILE *log = openLog(logfile);
-	if (log == NULL)
-	{
-		// THE ONLY ERROR MSG THAT COULDNT BE LOGGED
-		fprintf(stderr, "FATAL!: No se pudo abrir el archivo de log!\n");
-		fflush(stdout);
-
-		exit(1);
-	}
-	linger.l_onoff = 1;
-	linger.l_linger = 1;
-	if (setsockopt(sock, SOL_SOCKET, SO_LINGER, &linger,
-				   sizeof(linger)) == -1)
-	{
-		errout(hostname, log);
-	}
-
-	/* Go into a loop, receiving requests from the remote
-	 * client.  After the client has sent the last request,
-	 * it will do a shutdown for sending, which will cause
-	 * an end-of-file condition to appear on this end of the
-	 * connection.  After all of the client's requests have
-	 * been received, the next recv call will return zero
-	 * bytes, signalling an end-of-file condition.  This is
-	 * how the server will know that no more requests will
-	 * follow, and the loop will be exited.
-	 */
-	int tries = 5;
-	int numberOfLines;
-	char **matrizPreguntas = readArchivoPreguntas("archivopreguntas.txt", &numberOfLines);
-	fflush(stdout);
-
-	fprintf(log, "===================================================================\n");
-
-	fprintf(log, "STARTING LOG AT %s\n", getCurrentTimeStr());
-
-	fprintf(log, "NUMERO DE LINEAS LEIDAS: %d\n", numberOfLines);
-	fprintf(log, "===================================================================\n");
-
-	char **matrizRespuestas = readArchivoRespuestas("archivorespuestas.txt");
-
-	if (matrizPreguntas == NULL)
-	{
-		fflush(stdout);
-		fflush(stdout);
-		fprintf(log, "FATAL!: No se pudo leer el archivo de preguntas!\n");
-		fflush(stdout);
-
-		exit(1);
-	}
-	if (matrizRespuestas == NULL)
-	{
-		fflush(stdout);
-		fflush(stdout);
-		fprintf(log, "FATAL!: No se pudo leer el archivo de respuestas!\n");
-		fflush(stdout);
-
-		exit(1);
-	}
-	send(sock, "220 SERVICIO PREPARADO\r\n", sizeof("220 SERVICIO PREPARADO\r\n"), 0);
-
-	fprintf(log, "SERVER SENDING at %s on PORT %d|%s|%s|%s|%s", getCurrentTimeStr(), ntohs(clientaddr_in.sin_port), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", "220 SERVICIO PREPARADO\r\n");
-	fprintf(log, "===================================================================\n");
-	int index;
-	int next = 0;
-	char *lineofFileofQuestions;
-
-	while (1)
-	{
-
-		recv(sock, buf, TAM_BUFFER, 0);
-
-		if (esAdios(buf))
-		{
-
-			break;
-		}
-
-		if (strcmp(buf, "HOLA\r\n") == 0)
-		{
-
-			fprintf(log, "RECEIVED HOLA at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(clientaddr_in.sin_addr), "TCP", buf);
-			fprintf(log, "===================================================================\n");
-		}
-
-		if (strcmp(buf, HOLA) == 0 || next == 1)
-		{
-
-			next = 0;
-			lineofFileofQuestions = getRandomQuestion(matrizPreguntas, &index);
-
-			lineofFileofQuestions[strlen(lineofFileofQuestions) - 1] = '\0';
-
-			char response[TAM_BUFFER] = "250 ";
-			sprintf(response, "250 %s#%d\r\n", lineofFileofQuestions, tries);
-			len = send(sock, response, TAM_BUFFER, 0);
-
-			if (len == -1)
-			{
-				perror("Error al enviar");
-				exit(1);
-			}
-			fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", response);
-			fprintf(log, "===================================================================\n");
-
-			char *respuesta = getAnswerFromIndex(index, matrizRespuestas);
-			respuesta[strlen(respuesta) - 1] = '\0';
-			strcat(respuesta, "\r\n");
-
-			char esMayoroMenor[TAM_BUFFER];
-
-			do
-			{
-				// Recibir respuesta del cliente
-				sleep(1);
-				len = recv(sock, buf, TAM_BUFFER, 0);
-				if (len == -1)
-				{
-					perror("Error al recibir");
-					exit(1);
-				}
-				fprintf(log, "RECEIVED at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(clientaddr_in.sin_addr), "TCP", buf);
-				fprintf(log, "===================================================================\n");
-
-				fflush(stdout);
-
-				/*
-				LA RESPUESTA VIENE EN FORMATO "RESPUESTA <NUMERO>\r\n"
-				POR LO QUE SE DEBE SEPARAR EL NUMERO DEL RESTO DEL STRING
-				SINO -> ERROR DE SINTAXIS
-				*/
-				char evaluar[] = "RESPUESTA ";
-				int number;
-				int isvalidresponse = sscanf(buf, "%s %d\r\n", evaluar, &number);
-
-				if (strcmp(buf, ADIOS) == 0 || (isvalidresponse == 2) || strcmp(buf, "+\r\n") == 0)
-				{ // Verificar si el cliente envió "ADIOS"
-					if (strcmp(buf, "+\r\n") == 0)
-					{
-						tries++;
-						sprintf(esMayoroMenor, "345 INCREMENTADO 1 INTENTO\r\n");
-						len = send(sock, esMayoroMenor, TAM_BUFFER, 0);
-						// dont want to interact with the rest of the code
-						fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", esMayoroMenor);
-						fprintf(log, "===================================================================\n");
-						continue;
-					}
-					if (strcmp(buf, "ADIOS\r\n") == 0)
-					{
-						len = send(sock, ADIOS, sizeof(ADIOS), 0);
-						if (len == -1)
-						{
-							perror("Error al enviar");
-							exit(1);
-						}
-						fprintf(log, "CLOSING at %s on PORT %d |%s|%s|%s|%s", getCurrentTimeStr(), ntohs(clientaddr_in.sin_port), hostname, inet_ntoa(clientaddr_in.sin_addr), "TCP", "ADIOS\r\n");
-						fprintf(log, "===================================================================\n");
-						break;
-					}
-
-					if (number > atoi(respuesta))
-					{
-						tries--;
-						sprintf(esMayoroMenor, "354 %s#%d", MENOR, tries);
-						strcat(esMayoroMenor, "\r\n");
-						len = send(sock, esMayoroMenor, TAM_BUFFER, 0);
-						if (len == -1)
-						{
-							perror("Error al enviar");
-							exit(1);
-						}
-						fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", esMayoroMenor);
-						fprintf(log, "===================================================================\n");
-					}
-					if (number < atoi(respuesta))
-					{
-						tries--;
-						sprintf(esMayoroMenor, "354 %s#%d", MAYOR, tries);
-						strcat(esMayoroMenor, "\r\n");
-						len = send(sock, esMayoroMenor, TAM_BUFFER, 0);
-						fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", esMayoroMenor);
-						fprintf(log, "===================================================================\n");
-					}
-					if (number == atoi(respuesta))
-					{
-						len = send(sock, ACIERTO, sizeof(ACIERTO), 0);
-
-						if (len == -1)
-						{
-							perror("Error al enviar");
-							exit(1);
-						}
-						fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", ACIERTO);
-						fprintf(log, "===================================================================\n");
-						next = 1;
-					}
-				}
-				else
-				{
-					tries--;
-					sprintf(esMayoroMenor, "%s#%d\r\n", SYNTAX_ERROR, tries);
-					len = send(sock, esMayoroMenor, sizeof(esMayoroMenor), 0);
-					if (len == -1)
-					{
-						perror("Error al enviar");
-						exit(1);
-					}
-
-					fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", esMayoroMenor);
-					fprintf(log, "===================================================================\n");
-					continue;
-				}
-
-			} while (!next && tries > 0);
-
-			if (tries == 0)
-			{
-				len = send(sock, "375 FALLO\r\n", sizeof("375 FALLO\r\n"), 0);
-				if (len == -1)
-				{
-					perror("Error al enviar");
-					exit(1);
-				}
-				fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", "375 FALLO\r\n");
-				break;
-			}
-		}
-		else
-		{
-			len = send(sock, SYNTAX_ERROR, sizeof(SYNTAX_ERROR), 0);
-			if (len == -1)
-			{
-				perror("Error al enviar");
-				exit(1);
-			}
-			fprintf(log, "RECEIVED AT %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(clientaddr_in.sin_addr), "TCP", buf);
-			fprintf(log, "\n");
-			fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", SYNTAX_ERROR);
-			fprintf(log, "===================================================================\n");
-			continue;
-		}
-	}
-
-	/* Log a finishing message. */
-	fclose(log);
-}
-
-/*
- *	This routine aborts the child process attending the client.
- */
-void errout(char *hostname, FILE *log)
-{
-	fprintf(log, "Exiting from %s\n", hostname);
-	fflush(stdout);
-	fclose(log);
-	exit(1);
-}
-
-void serverUDP(int socketUDP, char *buf, struct sockaddr_in clientaddr_in, struct sockaddr_in myaddr_in)
-{
 	FILE *log = openLog("peticiones.txt");
 	char *hostname = "localhost";
 	if (log == NULL)
@@ -666,21 +333,21 @@ void serverUDP(int socketUDP, char *buf, struct sockaddr_in clientaddr_in, struc
 		exit(1);
 	}
 	struct in_addr reqaddr; /* for requested host's address */
-	struct hostent *hp;		/* pointer to host info for requested host */
-	int nc, errcode;
-	int len, status;
+	int errcode;
+	int len;
 
 	struct addrinfo hints, *res;
 
-	int addrlen;
+	socklen_t addrlen;
 
 	addrlen = sizeof(struct sockaddr_in);
-
+	char buf[TAM_BUFFER];
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_INET;
 	/* Treat the message as a string containing a hostname. */
 	/* Esta funci�n es la recomendada para la compatibilidad con IPv6 gethostbyname queda obsoleta. */
 	errcode = getaddrinfo(buf, NULL, &hints, &res);
+
 	if (errcode != 0)
 	{
 		/* Name was not found.  Return a
@@ -726,192 +393,10 @@ void serverUDP(int socketUDP, char *buf, struct sockaddr_in clientaddr_in, struc
 
 		exit(1);
 	}
-	sendto(socketUDP, "220 SERVICIO PREPARADO\r\n", sizeof("220 SERVICIO PREPARADO\r\n"), 0, (struct sockaddr *)&clientaddr_in, addrlen);
 
-	fprintf(log, "SERVER SENDING at %s on PORT %d|%s|%s|%s|%s", getCurrentTimeStr(), ntohs(clientaddr_in.sin_port), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", "220 SERVICIO PREPARADO\r\n");
-	fprintf(log, "===================================================================\n");
 	int index;
 	int next = 0;
 	char *lineofFileofQuestions;
 
-	while (1)
-	{
-
-		recvfrom(socketUDP, buf, TAM_BUFFER, 0, (struct sockaddr *)&clientaddr_in, &addrlen);
-
-		if (esAdios(buf))
-		{
-
-			break;
-		}
-
-		if (strcmp(buf, "HOLA\r\n") == 0)
-		{
-
-			fprintf(log, "RECEIVED HOLA at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(clientaddr_in.sin_addr), "TCP", buf);
-			fprintf(log, "===================================================================\n");
-		}
-
-		if (strcmp(buf, HOLA) == 0 || next == 1)
-		{
-
-			next = 0;
-			lineofFileofQuestions = getRandomQuestion(matrizPreguntas, &index);
-
-			lineofFileofQuestions[strlen(lineofFileofQuestions) - 1] = '\0';
-
-			char response[TAM_BUFFER] = "250 ";
-			sprintf(response, "250 %s#%d\r\n", lineofFileofQuestions, tries);
-			len = sendto(socketUDP, response, TAM_BUFFER, 0, (struct sockaddr *)&clientaddr_in, addrlen);
-
-			if (len == -1)
-			{
-				perror("Error al enviar");
-				exit(1);
-			}
-			fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", response);
-			fprintf(log, "===================================================================\n");
-
-			char *respuesta = getAnswerFromIndex(index, matrizRespuestas);
-			respuesta[strlen(respuesta) - 1] = '\0';
-			strcat(respuesta, "\r\n");
-
-			char esMayoroMenor[TAM_BUFFER];
-
-			do
-			{
-				// Recibir respuesta del cliente
-				sleep(1);
-				len = recvfrom(socketUDP, buf, TAM_BUFFER, 0, (struct sockaddr *)&clientaddr_in, &addrlen);
-				if (len == -1)
-				{
-					perror("Error al recibir");
-					exit(1);
-				}
-				fprintf(log, "RECEIVED at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(clientaddr_in.sin_addr), "TCP", buf);
-				fprintf(log, "===================================================================\n");
-
-				fflush(stdout);
-
-				/*
-				LA RESPUESTA VIENE EN FORMATO "RESPUESTA <NUMERO>\r\n"
-				POR LO QUE SE DEBE SEPARAR EL NUMERO DEL RESTO DEL STRING
-				SINO -> ERROR DE SINTAXIS
-				*/
-				char evaluar[] = "RESPUESTA ";
-				int number;
-				int isvalidresponse = sscanf(buf, "%s %d\r\n", evaluar, &number);
-
-				if (strcmp(buf, ADIOS) == 0 || (isvalidresponse == 2) || strcmp(buf, "+\r\n") == 0)
-				{ // Verificar si el cliente envió "ADIOS"
-					if (strcmp(buf, "+\r\n") == 0)
-					{
-						tries++;
-						sprintf(esMayoroMenor, "345 INCREMENTADO 1 INTENTO\r\n");
-						len = sendto(socketUDP, esMayoroMenor, TAM_BUFFER, 0, (struct sockaddr *)&clientaddr_in, addrlen);
-						// dont want to interact with the rest of the code
-						fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", esMayoroMenor);
-						fprintf(log, "===================================================================\n");
-						continue;
-					}
-					if (strcmp(buf, "ADIOS\r\n") == 0)
-					{
-						len = sendto(socketUDP, ADIOS, sizeof(ADIOS), 0, (struct sockaddr *)&clientaddr_in, addrlen);
-						if (len == -1)
-						{
-							perror("Error al enviar");
-							exit(1);
-						}
-						fprintf(log, "CLOSING at %s on PORT %d |%s|%s|%s|%s", getCurrentTimeStr(), ntohs(clientaddr_in.sin_port), hostname, inet_ntoa(clientaddr_in.sin_addr), "TCP", "ADIOS\r\n");
-						fprintf(log, "===================================================================\n");
-						break;
-					}
-
-					if (number > atoi(respuesta))
-					{
-						tries--;
-						sprintf(esMayoroMenor, "354 %s#%d", MENOR, tries);
-						strcat(esMayoroMenor, "\r\n");
-						len = sendto(socketUDP, esMayoroMenor, TAM_BUFFER, 0, (struct sockaddr *)&clientaddr_in, addrlen);
-						if (len == -1)
-						{
-							perror("Error al enviar");
-							exit(1);
-						}
-						fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", esMayoroMenor);
-						fprintf(log, "===================================================================\n");
-					}
-					if (number < atoi(respuesta))
-					{
-						tries--;
-						sprintf(esMayoroMenor, "354 %s#%d", MAYOR, tries);
-						strcat(esMayoroMenor, "\r\n");
-						len = sendto(socketUDP, esMayoroMenor, TAM_BUFFER, 0, (struct sockaddr *)&clientaddr_in, addrlen);
-						fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", esMayoroMenor);
-						fprintf(log, "===================================================================\n");
-					}
-					if (number == atoi(respuesta))
-					{
-						len = sendto(socketUDP, ACIERTO, sizeof(ACIERTO), 0, (struct sockaddr *)&clientaddr_in, addrlen);
-
-						if (len == -1)
-						{
-							perror("Error al enviar");
-							exit(1);
-						}
-						fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", ACIERTO);
-						fprintf(log, "===================================================================\n");
-						next = 1;
-					}
-				}
-				else
-				{
-					tries--;
-					sprintf(esMayoroMenor, "%s#%d\r\n", SYNTAX_ERROR, tries);
-					len = sendto(socketUDP, esMayoroMenor, sizeof(esMayoroMenor), 0, (struct sockaddr *)&clientaddr_in, addrlen);
-					if (len == -1)
-					{
-						perror("Error al enviar");
-						exit(1);
-					}
-
-					fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", esMayoroMenor);
-					fprintf(log, "===================================================================\n");
-					continue;
-				}
-
-			} while (!next && tries > 0);
-
-			if (tries == 0)
-			{
-				len = sendto(socketUDP, "375 FALLO\r\n", sizeof("375 FALLO\r\n"), 0, (struct sockaddr *)&clientaddr_in, addrlen);
-				if (len == -1)
-				{
-					perror("Error al enviar");
-					exit(1);
-				}
-				fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", "375 FALLO\r\n");
-				break;
-			}
-		}
-		else
-		{
-			len = sendto(socketUDP, SYNTAX_ERROR, sizeof(SYNTAX_ERROR), 0, (struct sockaddr *)&clientaddr_in, addrlen);
-			if (len == -1)
-			{
-				perror("Error al enviar");
-				exit(1);
-			}
-			fprintf(log, "RECEIVED AT %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(clientaddr_in.sin_addr), "TCP", buf);
-			fprintf(log, "\n");
-			fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", SYNTAX_ERROR);
-			fprintf(log, "===================================================================\n");
-			continue;
-		}
-	}
-
-	/* Log a finishing message. */
-	fclose(log);
-	
-	
+	printf("Servidor UDP listo para recibir peticiones\n");
 }
