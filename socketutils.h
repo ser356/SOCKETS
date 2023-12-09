@@ -23,6 +23,7 @@ FORMAT PROTOCOL FOR THE SERVER AND CLIENT ARE ALSO DEFINED HERE
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#define MAX_ATTEMPTS 5
 #define HOLA "HOLA\r\n"
 #define ADIOS "ADIOS\r\n"
 #define ACIERTO "350 ACIERTO\r\n"
@@ -48,7 +49,8 @@ char **readArchivoPreguntas(char *nombreArchivo, int *nlines);
 char **readArchivoRespuestas(char *nombreArchivo);
 void serverTCP(int s, struct sockaddr_in peeraddr_in, struct sockaddr_in serveraddr_in);
 void serverUDP(int s, struct sockaddr_in peeraddr_in, struct sockaddr_in serveraddr_in);
-
+void errout(char *hostname, FILE *log);
 void handler();
+int recibeUDPMejorado(int s, void *buffer, size_t buffer_size, int flags, struct sockaddr *addr, socklen_t *addrlen);
 #endif
 
