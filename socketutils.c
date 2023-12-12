@@ -1,3 +1,10 @@
+/*
+** Fichero: servidor.c
+** Autores:
+** ser365 (https://github.com/ser356)
+** andresblz (https://github.com/andresblz)
+*/
+
 #include "socketutils.h"
 /*
  *			H A N D L E R
@@ -6,8 +13,19 @@
  */
 void handler()
 {
-	printf("Alarma recibida \n");
-}
+	FILE *log = openLog("peticiones.log");
+	if(log == NULL){
+		printf("Error al abrir el archivo de log\n");
+		fflush(stdout);
+		exit(1);
+	} else {
+		fprintf(log, "ALARMA RECIBIDA\n");
+		fflush(log);
+	}	
+	fclose(log);
+	
+}	
+
 char **readArchivoPreguntas(char *nombreArchivo, int *nlines)
 {
 	*nlines = 0;
@@ -57,6 +75,7 @@ char **readArchivoRespuestas(char *nombreArchivo)
 	fclose(file);
 	return matrizRespuestas;
 }
+
 char *getRandomQuestion(char **matrizPreguntas, int *index)
 {
 
@@ -64,6 +83,7 @@ char *getRandomQuestion(char **matrizPreguntas, int *index)
 	*index = random;
 	return matrizPreguntas[random];
 }
+
 char *getAnswerFromIndex(int index, char **matrizPreguntas)
 {
 	return matrizPreguntas[index];
@@ -73,6 +93,7 @@ int esAdios(char *buffer)
 {
 	return strcmp(buffer, ADIOS) == 0 ? 1 : 0;
 }
+
 int createLog(char *filename)
 {
 	FILE *file = fopen(filename, "w");
@@ -102,6 +123,7 @@ FILE *openLog(char *filename)
 	}
 	return file;
 }
+
 char *getCurrentTimeStr()
 {
 	time_t timevar;
@@ -110,6 +132,7 @@ char *getCurrentTimeStr()
 	timeStr[strlen(timeStr) - 1] = '\0'; // Eliminar el carácter de nueva línea
 	return timeStr;
 }
+
 /*
  *	This routine aborts the child process attending the client.
  */
@@ -121,7 +144,7 @@ void errout(char *hostname, FILE *log)
 	exit(1);
 }
 
-int recibeUDPMejorado(int s, void *buffer, size_t buffer_size, int flags, struct sockaddr *addr, socklen_t *addrlen)
+int recibeUDPMejorado(int s, void *buffer, FILE *logfile,size_t buffer_size, int flags, struct sockaddr *addr, socklen_t *addrlen)
 {
     int n_retry = 0;
     while (n_retry < MAX_ATTEMPTS)
@@ -132,22 +155,29 @@ int recibeUDPMejorado(int s, void *buffer, size_t buffer_size, int flags, struct
         {
             if (errno == EINTR)
             {
-                fprintf(stderr, "Timeout waiting for response from server\n");
+				fprintf(logfile, "Timeout waiting for response from server\n");
+				fflush(logfile);
                 n_retry++;
                 continue;
             }
             else
             {
                 perror("recvfrom");
-                fprintf(stderr, "Unable to receive response from server\n");
-                exit(1);
+                fprintf(logfile, "Unable to receive response from server\n");
+				fflush(logfile);
+                fclose(logfile);
+				exit(1);
             }
         }
         else
         {
+			alarm(0);
             return len;
         }
     }
-    fprintf(stderr, "Maximum number of attempts reached\n");
+
+	fprintf(logfile, "Maximum number of attempts reached\n");
+	fflush(logfile);
+	fclose(logfile);
     exit(1);
 }

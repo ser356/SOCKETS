@@ -1,0 +1,21 @@
+Connected to nogal on port 57222 at Tue Dec 12 15:12:13 2023
+SERVER SENDED 220 SERVICIO PREPARADO
+ at nogal on PORT 57222
+CLIENT SENDED HOLA
+ at nogal on PORT 57222
+SERVER SENDED 250 ¿Cuántos metros mide una pista de atletismo?#5
+ at nogal on PORT 57222
+CLIENT SENDED no lo se
+ at nogal on PORT 57222
+SERVER SENDED 500 Error de sintaxis#4
+ at nogal on PORT 57222
+CLIENT SENDED 1
+ at nogal on PORT 57222
+SERVER SENDED 500 Error de sintaxis#3
+ at nogal on PORT 57222
+CLIENT SENDED ADIOS
+ at nogal on PORT 57222
+SERVER SENDED ADIOS
+ at nogal on PORT 57222
+Closing down on port 57222 at Tue Dec 12 15:12:27 2023
+============================================================

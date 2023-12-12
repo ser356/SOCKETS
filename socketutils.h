@@ -1,3 +1,10 @@
+/*
+** Fichero: socketutils.h
+** Autores:
+** ser365 (https://github.com/ser356)
+** andresblz (https://github.com/andresblz)
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,8 +41,8 @@ FORMAT PROTOCOL FOR THE SERVER AND CLIENT ARE ALSO DEFINED HERE
 #define ADDRNOTFOUND	0xffffffff	/* value returned for unknown host */
 #define RETRIES	5		/* number of times to retry before givin up */
 #define BUFFERSIZE	1024	/* maximum size of packets to be received */
-#define PUERTO 17278
-#define TIMEOUT 6
+#define PUERTO 1431
+#define TIMEOUT 30
 #define MAXHOST 512
 #define SYNTAX_ERROR "500 Error de sintaxis"
 extern int errno;
@@ -51,6 +58,6 @@ void serverTCP(int s, struct sockaddr_in peeraddr_in, struct sockaddr_in servera
 void serverUDP(int s, struct sockaddr_in peeraddr_in, struct sockaddr_in serveraddr_in);
 void errout(char *hostname, FILE *log);
 void handler();
-int recibeUDPMejorado(int s, void *buffer, size_t buffer_size, int flags, struct sockaddr *addr, socklen_t *addrlen);
+int recibeUDPMejorado(int s, void *buffer, FILE *logfile,size_t buffer_size, int flags, struct sockaddr *addr, socklen_t *addrlen);
 #endif
 

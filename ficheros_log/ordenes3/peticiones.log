@@ -1,0 +1,74 @@
+===================================================================
+STARTING LOG AT Tue Dec 12 15:52:49 2023
+NUMERO DE LINEAS LEIDAS: 10
+===================================================================
+SERVER SENDING at Tue Dec 12 15:52:49 2023 on PORT 57236|nogal.fis.usal.es|0.0.0.0|TCP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Tue Dec 12 15:52:49 2023|nogal.fis.usal.es|212.128.144.105|TCP|HOLA
+===================================================================
+SERVER SENDING at Tue Dec 12 15:52:49 2023|nogal.fis.usal.es|0.0.0.0|TCP|250 ¿Cuántos metros mide una pista de atletismo?#5
+===================================================================
+RECEIVED at Tue Dec 12 15:52:50 2023|nogal.fis.usal.es|212.128.144.105|TCP|dd
+===================================================================
+SERVER SENDING at Tue Dec 12 15:52:50 2023|nogal.fis.usal.es|0.0.0.0|TCP|500 Error de sintaxis#4
+===================================================================
+RECEIVED at Tue Dec 12 15:52:51 2023|nogal.fis.usal.es|212.128.144.105|TCP|RESPUESTA 1
+===================================================================
+SERVER SENDING at Tue Dec 12 15:52:51 2023|nogal.fis.usal.es|0.0.0.0|TCP|350 ACIERTO
+===================================================================
+SERVER SENDING at Tue Dec 12 15:52:51 2023|nogal.fis.usal.es|0.0.0.0|TCP|250 ¿Cuántos hoyos tiene un campo de golf?#4
+===================================================================
+RECEIVED at Tue Dec 12 15:52:52 2023|nogal.fis.usal.es|212.128.144.105|TCP|3
+===================================================================
+SERVER SENDING at Tue Dec 12 15:52:52 2023|nogal.fis.usal.es|0.0.0.0|TCP|500 Error de sintaxis#3
+===================================================================
+RECEIVED at Tue Dec 12 15:52:53 2023|nogal.fis.usal.es|212.128.144.105|TCP|2
+===================================================================
+SERVER SENDING at Tue Dec 12 15:52:53 2023|nogal.fis.usal.es|0.0.0.0|TCP|500 Error de sintaxis#2
+===================================================================
+RECEIVED at Tue Dec 12 15:52:54 2023|nogal.fis.usal.es|212.128.144.105|TCP|2
+===================================================================
+SERVER SENDING at Tue Dec 12 15:52:54 2023|nogal.fis.usal.es|0.0.0.0|TCP|500 Error de sintaxis#1
+===================================================================
+RECEIVED at Tue Dec 12 15:52:55 2023|nogal.fis.usal.es|212.128.144.105|TCP|2
+===================================================================
+SERVER SENDING at Tue Dec 12 15:52:55 2023|nogal.fis.usal.es|0.0.0.0|TCP|500 Error de sintaxis#0
+===================================================================
+SERVER SENDING at Tue Dec 12 15:52:55 2023|nogal.fis.usal.es|0.0.0.0|TCP|375 FALLO
+===================================================================
+STARTING LOG AT Tue Dec 12 15:53:02 2023
+NUMERO DE LINEAS LEIDAS: 10
+===================================================================
+SERVER SENDING at Tue Dec 12 15:53:02 2023 on PORT 52211|nogal.fis.usal.es|0.0.0.0|UDP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Tue Dec 12 15:53:02 2023|nogal.fis.usal.es|212.128.144.105|UDP|HOLA
+===================================================================
+SERVER SENDING at Tue Dec 12 15:53:02 2023|nogal.fis.usal.es|0.0.0.0|UDP|250 ¿Cuántos metros mide una pista de atletismo?#5
+===================================================================
+RECEIVED at Tue Dec 12 15:53:03 2023|nogal.fis.usal.es|212.128.144.105|UDP|dd
+===================================================================
+SERVER SENDING at Tue Dec 12 15:53:03 2023|nogal.fis.usal.es|0.0.0.0|UDP|500 Error de sintaxis#4
+===================================================================
+RECEIVED at Tue Dec 12 15:53:04 2023|nogal.fis.usal.es|212.128.144.105|UDP|RESPUESTA 1
+===================================================================
+SERVER SENDING at Tue Dec 12 15:53:04 2023|nogal.fis.usal.es|0.0.0.0|UDP|350 ACIERTO
+===================================================================
+SERVER SENDING at Tue Dec 12 15:53:04 2023|nogal.fis.usal.es|0.0.0.0|UDP|250 ¿Cuántos hoyos tiene un campo de golf?#4
+===================================================================
+RECEIVED at Tue Dec 12 15:53:05 2023|nogal.fis.usal.es|212.128.144.105|UDP|3
+===================================================================
+SERVER SENDING at Tue Dec 12 15:53:05 2023|nogal.fis.usal.es|0.0.0.0|UDP|500 Error de sintaxis#3
+===================================================================
+RECEIVED at Tue Dec 12 15:53:06 2023|nogal.fis.usal.es|212.128.144.105|UDP|2
+===================================================================
+SERVER SENDING at Tue Dec 12 15:53:06 2023|nogal.fis.usal.es|0.0.0.0|UDP|500 Error de sintaxis#2
+===================================================================
+RECEIVED at Tue Dec 12 15:53:07 2023|nogal.fis.usal.es|212.128.144.105|UDP|2
+===================================================================
+SERVER SENDING at Tue Dec 12 15:53:07 2023|nogal.fis.usal.es|0.0.0.0|UDP|500 Error de sintaxis#1
+===================================================================
+RECEIVED at Tue Dec 12 15:53:08 2023|nogal.fis.usal.es|212.128.144.105|UDP|2
+===================================================================
+SERVER SENDING at Tue Dec 12 15:53:08 2023|nogal.fis.usal.es|0.0.0.0|UDP|500 Error de sintaxis#0
+===================================================================
+SERVER SENDING at Tue Dec 12 15:53:08 2023|nogal.fis.usal.es|0.0.0.0|UDP|375 FALLO

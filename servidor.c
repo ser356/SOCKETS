@@ -1,11 +1,20 @@
+/*
+** Fichero: servidor.c
+** Autores:
+** ser365 (https://github.com/ser356)
+** andresblz (https://github.com/andresblz)
+*/
 #include "socketutils.h"
 #define true 1
 #define false 0
+#include <semaphore.h>
+
+sem_t udpSemaphore;
+sem_t tcpSemaphore;
 int FIN = 0; /* Para el cierre ordenado */
 void finalizar() { FIN = 1; }
 int main(int argc, char **argv)
 {
-
 	int s_TCP, s_UDP;	/* connected socket descriptor */
 	int ls_TCP, ls_UDP; /* listening socket descriptor */
 
@@ -185,6 +194,7 @@ int main(int argc, char **argv)
 				/* Check if the selected socket is TCP */
 				if (FD_ISSET(ls_TCP, &readmask))
 				{
+					sleep(1);
 					/* Note that addrlen is passed as a pointer
 					 * so that the accept call can return the
 					 * size of the returned address.
@@ -231,8 +241,11 @@ int main(int argc, char **argv)
 
 				/* Check if the selected socket is UDP */
 				/* Check if the selected socket is UDP */
+				/* Check if the selected socket is UDP */
 				if (FD_ISSET(ls_UDP, &readmask))
 				{
+
+					sleep(5);					
 					/* This call will block until a new
 					 * request arrives.  Then, it will create
 					 * a false "TCP" connection and working the same
@@ -282,7 +295,7 @@ int main(int argc, char **argv)
 						exit(1);
 
 					case 0: /* Child process comes here. */
-						/* Child doesnt need the listening socket */
+							/* Child doesnt need the listening socket */
 						close(ls_UDP);
 
 						/* Sends a message to the client for him to know the new port for
@@ -294,22 +307,24 @@ int main(int argc, char **argv)
 							fprintf(stderr, "%s: unable to send request to \"connect\" \n", argv[0]);
 							exit(1);
 						}
+ 
 
 						// Starts up the server
 						serverUDP(s_UDP, clientaddr_in, myaddr_in);
+
 						exit(0);
 
-					default:
-						close(s_UDP);
+					
 					}
-				} /* End UDP */
+
+				} /* End UDP*/
 			}
 
 		} /* End new clients loop */
 
 		/* Close sockets before stopping the server */
 		close(ls_TCP);
-		close(ls_UDP);
+		close(s_UDP);
 
 		printf("\nFin de programa servidor!\n");
 
@@ -379,7 +394,7 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in, struct sockaddr_in my
 	 * This will cause a final close of this socket to wait until all of the
 	 * data sent on it has been received by the remote host.
 	 */
-	char *logfile = "peticiones.txt";
+	char *logfile = "peticiones.log";
 	FILE *log = openLog(logfile);
 	if (log == NULL)
 	{
@@ -618,7 +633,7 @@ void serverTCP(int sock, struct sockaddr_in clientaddr_in, struct sockaddr_in my
 			}
 			fprintf(log, "RECEIVED AT %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(clientaddr_in.sin_addr), "TCP", buf);
 			fprintf(log, "\n");
-			fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", SYNTAX_ERROR);
+			fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s\n", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "TCP", SYNTAX_ERROR);
 			fprintf(log, "===================================================================\n");
 			continue;
 		}
@@ -661,7 +676,7 @@ void serverUDP(int socketUDP, struct sockaddr_in clientaddr_in, struct sockaddr_
 	// printf("[SERV UDP] Startup from %s port %u at %s",
 	//	hostname, ntohs(clientaddr_in.sin_port), (char *) ctime(&timevar));
 
-	char *logfile = "peticiones.txt";
+	char *logfile = "peticiones.log";
 	FILE *log = openLog(logfile);
 	char buf[TAM_BUFFER]; /* This example uses TAM_BUFFER byte messages. */
 	int next = 0;
@@ -709,8 +724,6 @@ void serverUDP(int socketUDP, struct sockaddr_in clientaddr_in, struct sockaddr_
 		exit(1);
 	}
 
-	sendto(socketUDP, "220 SERVICIO PREPARADO\r\n", sizeof("220 SERVICIO PREPARADO\r\n"), 0, (struct sockaddr *)&clientaddr_in, addrlen);
-
 	fprintf(log, "SERVER SENDING at %s on PORT %d|%s|%s|%s|%s", getCurrentTimeStr(), ntohs(clientaddr_in.sin_port), hostname, inet_ntoa(myaddr_in.sin_addr), "UDP", "220 SERVICIO PREPARADO\r\n");
 	fflush(log);
 	fprintf(log, "===================================================================\n");
@@ -723,15 +736,13 @@ void serverUDP(int socketUDP, struct sockaddr_in clientaddr_in, struct sockaddr_
 
 		recvfrom(socketUDP, buf, TAM_BUFFER, 0, (struct sockaddr *)&clientaddr_in, &addrlen);
 
-		if (esAdios(buf))
-		{
-
-			break;
-		}
+		//if (esAdios(buf))
+		//{
+			//break;
+		//}
 
 		if (strcmp(buf, "HOLA\r\n") == 0)
 		{
-
 			fprintf(log, "RECEIVED HOLA at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(clientaddr_in.sin_addr), "UDP", buf);
 			fflush(log);
 			fprintf(log, "===================================================================\n");
@@ -740,7 +751,6 @@ void serverUDP(int socketUDP, struct sockaddr_in clientaddr_in, struct sockaddr_
 
 		if (strcmp(buf, HOLA) == 0 || next == 1)
 		{
-
 			next = 0;
 			lineofFileofQuestions = getRandomQuestion(matrizPreguntas, &index);
 
@@ -921,7 +931,7 @@ void serverUDP(int socketUDP, struct sockaddr_in clientaddr_in, struct sockaddr_
 			fprintf(log, "\n");
 			fflush(log);
 
-			fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "UDP", SYNTAX_ERROR);
+			fprintf(log, "SERVER SENDING at %s|%s|%s|%s|%s\n", getCurrentTimeStr(), hostname, inet_ntoa(myaddr_in.sin_addr), "UDP", SYNTAX_ERROR);
 			fflush(log);
 
 			fprintf(log, "===================================================================\n");

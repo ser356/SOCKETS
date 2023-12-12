@@ -1,3 +1,10 @@
+/*
+** Fichero: cliente.c
+** Autores:
+** ser365 (https://github.com/ser356)
+** andresblz (https://github.com/andresblz)
+*/
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -11,9 +18,6 @@
 #include "socketutils.h"
 #include <signal.h>
 #include <errno.h>
-
-#define PUERTO 17278
-#define TAM_BUFFER 516
 #define MAX_ATTEMPTS 5
 void clienteTCP(char *program, char *hostname, char *protocol, char *filename);
 void clienteUDP(char *program, char *hostname, char *protocol, char *filename);
@@ -25,6 +29,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Uso: %s <host> <protocolo> <archivo>\n", argv[0]);
         exit(1);
     }
+
     if (strcasecmp(argv[2], "tcp") != 0 && strcasecmp(argv[2], "udp") != 0)
 
     {
@@ -43,8 +48,10 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
 void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
 {
+    
     int s, len; /* connected socket descriptor */
     struct addrinfo hints, *res;
     long timevar;                   /* contains time returned by time() */
@@ -52,15 +59,8 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
     struct sockaddr_in servaddr_in; /* for server socket address */
     socklen_t addrlen;
     int errcode;
-    char *logfile = "cliente.txt";
-    FILE *log;
-    log = openLog(logfile);
-    if (log == NULL)
-    {
-        perror(program);
-        fprintf(stderr, "%s: unable to open file %s\n", program, logfile);
-        exit(1);
-    }
+
+
     /* This example uses TAM_BUFFER byte messages. */
     char buf[TAM_BUFFER];
     char *file = malloc(strlen(filename + 1));
@@ -70,9 +70,8 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
         fprintf(stderr, "%s: unable to allocate memory\n", program);
         exit(1);
     }
-    strncpy(file, filename, strlen(filename) + 1);
     FILE *fp;
-    if ((fp = fopen(file, "r")) == NULL)
+    if ((fp = fopen(filename, "r")) == NULL)
     {
         perror(program);
         fprintf(stderr, "%s: unable to open file %s\n", program, file);
@@ -139,6 +138,19 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
     {
         perror(program);
         fprintf(stderr, "%s: unable to read socket address\n", program);
+        exit(1);
+    }
+
+    char logfile[50];
+    sprintf(logfile, "%d.log", ntohs(myaddr_in.sin_port));
+    char newlog[50];
+
+    FILE *log;
+    log = openLog(logfile);
+    if (log == NULL)
+    {
+        perror(program);
+        fprintf(stderr, "%s: unable to open file %s\n", program, logfile);
         exit(1);
     }
 
@@ -228,9 +240,17 @@ void clienteTCP(char *program, char *hostname, char *protocol, char *filename)
     fprintf(log, "============================================================\n");
     fflush(stdout);
 
-    close(s);
     fclose(log);
-}
+
+    sprintf(newlog, "cliente_%d.log", ntohs(myaddr_in.sin_port));
+    if (rename(logfile, newlog) != 0) {
+        perror(program);
+        fprintf(stderr, "%s: unable to rename log file\n", program);
+    }
+
+    close(s);
+} 
+
 void clienteUDP(char *program, char *hostname, char *protocol, char *filename)
 {
     // char buf[TAM_BUFFER];
@@ -243,15 +263,6 @@ void clienteUDP(char *program, char *hostname, char *protocol, char *filename)
     struct sockaddr_in servaddr_in; /* for server socket address */
     socklen_t addrlen;
     int errcode;
-    char *logfile = "cliente.txt";
-    FILE *log;
-    log = openLog(logfile);
-    if (log == NULL)
-    {
-        perror(program);
-        fprintf(stderr, "%s: unable to open file %s\n", program, logfile);
-        exit(1);
-    }
 
     s = socket(AF_INET, SOCK_DGRAM, 0);
     if (s == -1)
@@ -287,6 +298,19 @@ void clienteUDP(char *program, char *hostname, char *protocol, char *filename)
     {
         perror(program);
         fprintf(stderr, "%s: unable to read socket address\n", program);
+        exit(1);
+    }
+
+    char logfile[50];
+    sprintf(logfile, "%d.log", ntohs(myaddr_in.sin_port));
+    char newlog[50];
+
+    FILE *log;
+    log = openLog(logfile);
+    if (log == NULL)
+    {
+        perror(program);
+        fprintf(stderr, "%s: unable to open file %s\n", program, logfile);
         exit(1);
     }
 
@@ -346,14 +370,13 @@ void clienteUDP(char *program, char *hostname, char *protocol, char *filename)
         fprintf(stderr, "%s: unable to send request to \"connect\" \n", program);
         exit(1);
     }
-    char packet[TAM_BUFFER];
     /* Waits for the response of the server with the new socket it has to talk to */
-    if (-1 == recibeUDPMejorado(s, packet, TAM_BUFFER, 0, (struct sockaddr *)&servaddr_in, &addrlen))
+    if (recibeUDPMejorado(s,buf,log, TAM_BUFFER, 0, (struct sockaddr *)&servaddr_in, &addrlen) == -1)
     {
         perror(program);
-        fprintf(stderr, "%s: unable to receive response from server\n", program);
-        exit(1);
+        fprintf(stderr, "%s: Imposible recibir\n", program);
     }
+
     /* Print out a message indicating that we have sent the
      * connection request.
      */
@@ -367,11 +390,13 @@ void clienteUDP(char *program, char *hostname, char *protocol, char *filename)
         exit(1);
     }
 
-    recibeUDPMejorado(s, buf, TAM_BUFFER, 0, (struct sockaddr *)&servaddr_in, &addrlen);
-    fprintf(log, "SERVER SENDED %s at %s on PORT %u\n", buf, hostname, ntohs(myaddr_in.sin_port));
     int line_number = 1;
-    while (fgets(buf, TAM_BUFFER, fp) != NULL)
+    while (1)
     {
+        if(fgets(buf, TAM_BUFFER, fp) == NULL)
+        {
+            break;
+        }
         line_number++;
         tam = strlen(buf);
         // If the last char is \n, replace it with \0
@@ -392,7 +417,11 @@ void clienteUDP(char *program, char *hostname, char *protocol, char *filename)
             fprintf(stderr, "%s: Imposible enviar\n", program);
         }
         fprintf(log, "CLIENT SENDED %s at %s on PORT %u\n", buf, hostname, ntohs(myaddr_in.sin_port));
-        recibeUDPMejorado(s, buf, TAM_BUFFER, 0, (struct sockaddr *)&servaddr_in, &addrlen);
+        if (recibeUDPMejorado(s, buf, log,TAM_BUFFER, 0, (struct sockaddr *)&servaddr_in, &addrlen) == -1)
+        {
+            perror(program);
+            fprintf(stderr, "%s: Imposible recibir\n", program);
+        }
         fprintf(log, "SERVER SENDED %s at %s on PORT %u\n", buf, hostname, ntohs(myaddr_in.sin_port));
 
         if (strcmp(buf, "375 FALLO\r\n") == 0)
@@ -401,7 +430,14 @@ void clienteUDP(char *program, char *hostname, char *protocol, char *filename)
         }
     }
 
-    close(s);
-
     fclose(log);
+
+    sprintf(newlog, "cliente_%d.log", ntohs(myaddr_in.sin_port));
+    if (rename(logfile, newlog) != 0) {
+        perror(program);
+        fprintf(stderr, "%s: unable to rename log file\n", program);
+    }
+
+    close(s);
+    exit(0);
 }

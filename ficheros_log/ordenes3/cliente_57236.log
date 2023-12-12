@@ -1,0 +1,41 @@
+Connected to nogal on port 57236 at Tue Dec 12 15:52:48 2023
+SERVER SENDED 220 SERVICIO PREPARADO
+ at nogal on PORT 57236
+CLIENT SENDED HOLA
+ at nogal on PORT 57236
+SERVER SENDED 250 ¿Cuántos metros mide una pista de atletismo?#5
+ at nogal on PORT 57236
+CLIENT SENDED dd
+ at nogal on PORT 57236
+SERVER SENDED 500 Error de sintaxis#4
+ at nogal on PORT 57236
+CLIENT SENDED RESPUESTA 1
+ at nogal on PORT 57236
+SERVER SENDED 350 ACIERTO
+ at nogal on PORT 57236
+CLIENT SENDED 2
+ at nogal on PORT 57236
+SERVER SENDED 250 ¿Cuántos hoyos tiene un campo de golf?#4
+ at nogal on PORT 57236
+CLIENT SENDED 3
+ at nogal on PORT 57236
+SERVER SENDED 500 Error de sintaxis#3
+ at nogal on PORT 57236
+CLIENT SENDED 2
+ at nogal on PORT 57236
+SERVER SENDED 500 Error de sintaxis#2
+ at nogal on PORT 57236
+CLIENT SENDED 2
+ at nogal on PORT 57236
+SERVER SENDED 500 Error de sintaxis#1
+ at nogal on PORT 57236
+CLIENT SENDED 2
+ at nogal on PORT 57236
+SERVER SENDED 500 Error de sintaxis#0
+ at nogal on PORT 57236
+CLIENT SENDED ADIOS
+ at nogal on PORT 57236
+SERVER SENDED 375 FALLO
+ at nogal on PORT 57236
+Closing down on port 57236 at Tue Dec 12 15:52:58 2023
+============================================================

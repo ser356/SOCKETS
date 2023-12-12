@@ -1,0 +1,170 @@
+===================================================================
+STARTING LOG AT Tue Dec 12 15:12:15 2023
+NUMERO DE LINEAS LEIDAS: 10
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:15 2023 on PORT 57210|nogal.fis.usal.es|0.0.0.0|TCP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED AT Tue Dec 12 15:12:15 2023|nogal.fis.usal.es|212.128.144.105|TCP|RESPUESTA 67
+
+SERVER SENDING at Tue Dec 12 15:12:15 2023|nogal.fis.usal.es|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED AT Tue Dec 12 15:12:15 2023|nogal.fis.usal.es|212.128.144.105|TCP|RESPUESTA 110
+
+SERVER SENDING at Tue Dec 12 15:12:15 2023|nogal.fis.usal.es|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED AT Tue Dec 12 15:12:15 2023|nogal.fis.usal.es|212.128.144.105|TCP|+
+
+SERVER SENDING at Tue Dec 12 15:12:15 2023|nogal.fis.usal.es|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+RECEIVED AT Tue Dec 12 15:12:15 2023|nogal.fis.usal.es|212.128.144.105|TCP|RESPUESTA 51
+
+SERVER SENDING at Tue Dec 12 15:12:15 2023|nogal.fis.usal.es|0.0.0.0|TCP|500 Error de sintaxis
+===================================================================
+===================================================================
+STARTING LOG AT Tue Dec 12 15:12:20 2023
+NUMERO DE LINEAS LEIDAS: 10
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:20 2023 on PORT 41109|nogal.fis.usal.es|0.0.0.0|UDP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Tue Dec 12 15:12:20 2023|nogal.fis.usal.es|212.128.144.105|UDP|HOLA
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:20 2023|nogal.fis.usal.es|0.0.0.0|UDP|250 ¿Cuántos metros mide una pista de atletismo?#5
+===================================================================
+STARTING LOG AT Tue Dec 12 15:12:14 2023
+NUMERO DE LINEAS LEIDAS: 10
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:14 2023 on PORT 57198|nogal.fis.usal.es|0.0.0.0|TCP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Tue Dec 12 15:12:14 2023|nogal.fis.usal.es|212.128.144.105|TCP|HOLA
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:14 2023|nogal.fis.usal.es|0.0.0.0|TCP|250 ¿Cuántos metros mide una pista de atletismo?#5
+===================================================================
+RECEIVED at Tue Dec 12 15:12:15 2023|nogal.fis.usal.es|212.128.144.105|TCP|RESPUESTA no lo se
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:15 2023|nogal.fis.usal.es|0.0.0.0|TCP|500 Error de sintaxis#4
+===================================================================
+RECEIVED at Tue Dec 12 15:12:16 2023|nogal.fis.usal.es|212.128.144.105|TCP|RESPUESTA 67
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:16 2023|nogal.fis.usal.es|0.0.0.0|TCP|354 MENOR#3
+===================================================================
+RECEIVED at Tue Dec 12 15:12:17 2023|nogal.fis.usal.es|212.128.144.105|TCP|RESPUESTA 110
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:17 2023|nogal.fis.usal.es|0.0.0.0|TCP|354 MENOR#2
+===================================================================
+RECEIVED at Tue Dec 12 15:12:18 2023|nogal.fis.usal.es|212.128.144.105|TCP|RESPUESTA 220
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:18 2023|nogal.fis.usal.es|0.0.0.0|TCP|354 MENOR#1
+===================================================================
+RECEIVED at Tue Dec 12 15:12:19 2023|nogal.fis.usal.es|212.128.144.105|TCP|+
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:19 2023|nogal.fis.usal.es|0.0.0.0|TCP|345 INCREMENTADO 1 INTENTO
+===================================================================
+RECEIVED at Tue Dec 12 15:12:20 2023|nogal.fis.usal.es|212.128.144.105|TCP|RESPUESTA 51
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:20 2023|nogal.fis.usal.es|0.0.0.0|TCP|354 MENOR#1
+===================================================================
+RECEIVED at Tue Dec 12 15:12:21 2023|nogal.fis.usal.es|212.128.144.105|TCP|RESPUESTA 110
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:21 2023|nogal.fis.usal.es|0.0.0.0|TCP|354 MENOR#0
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:21 2023|nogal.fis.usal.es|0.0.0.0|TCP|375 FALLO
+===================================================================
+RECEIVED at Tue Dec 12 15:12:21 2023|nogal.fis.usal.es|212.128.144.105|UDP|RESPUESTA no lo se
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:21 2023|nogal.fis.usal.es|0.0.0.0|UDP|500 Error de sintaxis#4
+===================================================================
+RECEIVED at Tue Dec 12 15:12:22 2023|nogal.fis.usal.es|212.128.144.105|UDP|RESPUESTA 67
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:22 2023|nogal.fis.usal.es|0.0.0.0|UDP|354 MENOR#3
+===================================================================
+RECEIVED at Tue Dec 12 15:12:23 2023|nogal.fis.usal.es|212.128.144.105|UDP|RESPUESTA 110
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:23 2023|nogal.fis.usal.es|0.0.0.0|UDP|354 MENOR#2
+===================================================================
+RECEIVED at Tue Dec 12 15:12:24 2023|nogal.fis.usal.es|212.128.144.105|UDP|RESPUESTA 220
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:24 2023|nogal.fis.usal.es|0.0.0.0|UDP|354 MENOR#1
+===================================================================
+RECEIVED at Tue Dec 12 15:12:25 2023|nogal.fis.usal.es|212.128.144.105|UDP|+
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:25 2023|nogal.fis.usal.es|0.0.0.0|UDP|345 INCREMENTADO 1 INTENTO
+===================================================================
+===================================================================
+STARTING LOG AT Tue Dec 12 15:12:26 2023
+NUMERO DE LINEAS LEIDAS: 10
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:26 2023 on PORT 33262|nogal.fis.usal.es|0.0.0.0|UDP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED AT Tue Dec 12 15:12:26 2023|nogal.fis.usal.es|212.128.144.105|UDP|RESPUESTA 67
+
+SERVER SENDING at Tue Dec 12 15:12:26 2023|nogal.fis.usal.es|0.0.0.0|UDP|500 Error de sintaxis
+===================================================================
+RECEIVED AT Tue Dec 12 15:12:26 2023|nogal.fis.usal.es|212.128.144.105|UDP|RESPUESTA 110
+
+SERVER SENDING at Tue Dec 12 15:12:26 2023|nogal.fis.usal.es|0.0.0.0|UDP|500 Error de sintaxis
+===================================================================
+RECEIVED AT Tue Dec 12 15:12:26 2023|nogal.fis.usal.es|212.128.144.105|UDP|+
+
+SERVER SENDING at Tue Dec 12 15:12:26 2023|nogal.fis.usal.es|0.0.0.0|UDP|500 Error de sintaxis
+===================================================================
+RECEIVED AT Tue Dec 12 15:12:26 2023|nogal.fis.usal.es|212.128.144.105|UDP|RESPUESTA 51
+
+SERVER SENDING at Tue Dec 12 15:12:26 2023|nogal.fis.usal.es|0.0.0.0|UDP|500 Error de sintaxis
+===================================================================
+RECEIVED AT Tue Dec 12 15:12:26 2023|nogal.fis.usal.es|212.128.144.105|UDP|ADIOS
+
+SERVER SENDING at Tue Dec 12 15:12:26 2023|nogal.fis.usal.es|0.0.0.0|UDP|500 Error de sintaxis
+===================================================================
+RECEIVED at Tue Dec 12 15:12:26 2023|nogal.fis.usal.es|212.128.144.105|UDP|RESPUESTA 51
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:26 2023|nogal.fis.usal.es|0.0.0.0|UDP|354 MENOR#1
+===================================================================
+===================================================================
+STARTING LOG AT Tue Dec 12 15:12:21 2023
+NUMERO DE LINEAS LEIDAS: 10
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:21 2023 on PORT 57222|nogal.fis.usal.es|0.0.0.0|TCP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Tue Dec 12 15:12:21 2023|nogal.fis.usal.es|212.128.144.105|TCP|HOLA
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:21 2023|nogal.fis.usal.es|0.0.0.0|TCP|250 ¿Cuántos metros mide una pista de atletismo?#5
+===================================================================
+RECEIVED at Tue Dec 12 15:12:22 2023|nogal.fis.usal.es|212.128.144.105|TCP|no lo se
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:22 2023|nogal.fis.usal.es|0.0.0.0|TCP|500 Error de sintaxis#4
+===================================================================
+RECEIVED at Tue Dec 12 15:12:23 2023|nogal.fis.usal.es|212.128.144.105|TCP|1
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:23 2023|nogal.fis.usal.es|0.0.0.0|TCP|500 Error de sintaxis#3
+===================================================================
+RECEIVED at Tue Dec 12 15:12:24 2023|nogal.fis.usal.es|212.128.144.105|TCP|ADIOS
+===================================================================
+CLOSING at Tue Dec 12 15:12:24 2023 on PORT 57222 |nogal.fis.usal.es|212.128.144.105|TCP|ADIOS
+===================================================================
+RECEIVED at Tue Dec 12 15:12:27 2023|nogal.fis.usal.es|212.128.144.105|UDP|RESPUESTA 110
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:27 2023|nogal.fis.usal.es|0.0.0.0|UDP|354 MENOR#0
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:27 2023|nogal.fis.usal.es|0.0.0.0|UDP|375 FALLO
+===================================================================
+STARTING LOG AT Tue Dec 12 15:12:31 2023
+NUMERO DE LINEAS LEIDAS: 10
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:31 2023 on PORT 35517|nogal.fis.usal.es|0.0.0.0|UDP|220 SERVICIO PREPARADO
+===================================================================
+RECEIVED HOLA at Tue Dec 12 15:12:31 2023|nogal.fis.usal.es|212.128.144.105|UDP|HOLA
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:31 2023|nogal.fis.usal.es|0.0.0.0|UDP|250 ¿Cuántos metros mide una pista de atletismo?#5
+===================================================================
+RECEIVED at Tue Dec 12 15:12:32 2023|nogal.fis.usal.es|212.128.144.105|UDP|no lo se
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:32 2023|nogal.fis.usal.es|0.0.0.0|UDP|500 Error de sintaxis#4
+===================================================================
+RECEIVED at Tue Dec 12 15:12:33 2023|nogal.fis.usal.es|212.128.144.105|UDP|1
+===================================================================
+SERVER SENDING at Tue Dec 12 15:12:33 2023|nogal.fis.usal.es|0.0.0.0|UDP|500 Error de sintaxis#3
+===================================================================
+RECEIVED at Tue Dec 12 15:12:34 2023|nogal.fis.usal.es|212.128.144.105|UDP|ADIOS
+===================================================================
+CLOSING at Tue Dec 12 15:12:34 2023 on PORT 35517 |nogal.fis.usal.es|212.128.144.105|UDP|ADIOS
+===================================================================

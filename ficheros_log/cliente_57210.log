@@ -1,0 +1,21 @@
+Connected to nogal on port 57210 at Tue Dec 12 15:12:13 2023
+SERVER SENDED 220 SERVICIO PREPARADO
+ at nogal on PORT 57210
+CLIENT SENDED RESPUESTA 67
+ at nogal on PORT 57210
+SERVER SENDED 500 Error de sintaxis at nogal on PORT 57210
+CLIENT SENDED RESPUESTA 110
+ at nogal on PORT 57210
+SERVER SENDED 500 Error de sintaxis at nogal on PORT 57210
+CLIENT SENDED +
+ at nogal on PORT 57210
+SERVER SENDED 500 Error de sintaxis at nogal on PORT 57210
+CLIENT SENDED RESPUESTA 51
+ at nogal on PORT 57210
+SERVER SENDED 500 Error de sintaxis at nogal on PORT 57210
+CLIENT SENDED ADIOS
+ at nogal on PORT 57210
+SERVER SENDED ADIOS
+ at nogal on PORT 57210
+Closing down on port 57210 at Tue Dec 12 15:12:18 2023
+============================================================

@@ -1,0 +1,17 @@
+Connected to nogal on port 35517 at Tue Dec 12 15:12:13 2023
+CLIENT SENDED HOLA
+ at nogal on PORT 35517
+SERVER SENDED 250 ¿Cuántos metros mide una pista de atletismo?#5
+ at nogal on PORT 35517
+CLIENT SENDED no lo se
+ at nogal on PORT 35517
+SERVER SENDED 500 Error de sintaxis#4
+ at nogal on PORT 35517
+CLIENT SENDED 1
+ at nogal on PORT 35517
+SERVER SENDED 500 Error de sintaxis#3
+ at nogal on PORT 35517
+CLIENT SENDED ADIOS
+ at nogal on PORT 35517
+SERVER SENDED ADIOS
+ at nogal on PORT 35517
