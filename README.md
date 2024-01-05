@@ -586,7 +586,7 @@ La directiva `kill` permite matar todos los procesos llamados `servidor` que se 
 
 La práctica se ha subido a `nogal`, una vez subido se ha ejecutado la orden `make` para compilar el código. A continuación, se ha ejecutado el script `lanzaServidor.sh` para iniciar los diferentes procesos.
 
-Haciendo uso del comando `ps -aux | grep i0922349` se puede comprobar que se han iniciado los procesos correspondientes:
+Haciendo uso del comando `ps -aux | grep i09[...]` se puede comprobar que se han iniciado los procesos correspondientes:
 
 ![Imagen procesos](./Images/1.png)
 
